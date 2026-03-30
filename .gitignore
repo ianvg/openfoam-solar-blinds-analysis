@@ -1,0 +1,26 @@
+# OpenFOAM generated time directories
+[1-9]*
+0.* 
+*.OpenFOAM
+
+# Mesh and processor outputs
+processor*
+constant/polyMesh
+!constant/polyMesh/blockMeshDict
+
+# Logs
+log.*
+*.log
+
+# Post-processing
+postProcessing/
+
+# ParaView and visualization
+*.foam
+*.OpenFOAM
+
+# Temporary/editor files
+*~
+*.swp
+.DS_Store
+Thumbs.db
