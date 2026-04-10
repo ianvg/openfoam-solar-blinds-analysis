@@ -76,7 +76,53 @@ Check installation with:
 ```
 git --version
 ```
-4. Clone this repository
+## GitHub authentification: SSH only
+This repository should be used with SSH authentification only for Git operations.
+
+Do not use use HTTPS clone URLs for this project.
+1. Check whether an SSH key already exists:
+```
+ls -al ~/.ssh
+```
+Look for files such as:
+```
+id_ed25519
+id_ed25519.pub
+```
+If they do not exist, create a new SSH key.
+
+2. Generate a new SSH key:
+```
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+Press "Enter" to accept the default file location.
+
+3. Start the SSH agent:
+```
+eval "$(ssh-agent -s)"
+```
+4. Add the SSH key to the agent:
+```
+ssh-add ~/.ssh/id_ed25519
+```
+5. Display your public key:
+```
+cat ~/.ssh/id_ed25519.pub
+```
+Copy the full output and add it to your GitHub account:
+- GitHub
+- Settings
+- SSH and GPG keys
+- New SSH key
+6. Test GitHub SSH access:
+```
+ssh -T git@github.com
+```
+If successful, GitHub should confirm that authentification worked.
+When working inside WSL, create and use your SSH key inside Ubuntu so Git commands run from the Linux terminal authenticate correctly.
+
+
+## Cloning this repository
 First you must choose or create a working directory (folder), then clone the project into that directory.
 For example:
 ```
@@ -84,15 +130,15 @@ For example:
 mkdir -p ~/OpenFOAM/projects
 # This navigates to the directory that was just created.
 cd ~/OpenFOAM/projects
-# This code clones (copies) over the contents of the respository to the folder that you are currently in.
-git clone <repositoryurl>
+```
+Clone the repository using its SSH URL:
+```
+# This code clones (copies) over the contents of the respository to the folder that you are currently in. Replace **USERNAME/REPOSITORY.git** with actual repository path.
+git clone git@github.com:USERNAME/REPOSITORY.git
 # This navigates to the folder you are in.
-cd <repository-folder>
+cd REPOSITORY
 ```
-Example if you are using SSH:
-```
-git clone git@github.com/USERNAME/REPOSITORY.git
-```
+
 5. Configure Git identity
 Set your name and email so your commits are attributed correctly.
 ```
@@ -103,26 +149,22 @@ Check that your Git identity is set correctly:
 ```
 git config --global --list
 ```
-6. Set up SSH authentification for GitHub
-SSH is recommended HTTPS.
-Generate new SSH key in Ubuntu:
+## Verify the Git Remote uses SSH
+After cloning, verify the remote within the project directory:
 ```
-ssh-keygen -t ed25519 -C "your_email@example.com"
+git remote -v
 ```
-Start the SSH agent and add the key:
+The output should look like this:
 ```
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
+origin  git@github.com:USERNAME/REPOSITORY.git (fetch)
+origin  git@github.com:USERNAME/REPOSITORY.git (push)
 ```
-Display the public key:
+If the remote is incorrectly set to HTTPS, change it to SSH:
 ```
-cat ~/.ssh/id_ed25519.pub
+git remote set-url origin git@github.com:USERNAME/REPOSITORY.git
 ```
-Copy that key and add it to your GitHub account under SSH and GPG keys.
-Test the connection:
-```
-ssh -T git@github.com
-```
+
+
 ## Running the project
 1. Run the base case
 ```
@@ -138,7 +180,11 @@ Depending on the solver and case configuration, additional preprocessing or diff
 paraFoam
 ```
 ## Contributing to the project
-1. Before making changes, update your local copy:
+1. Move into the repository:
+```
+cd ~/OpenFOAM/projects/REPOSITORY
+```
+2. Before making changes, update your local copy:
 ```
 git pull
 ```
@@ -157,18 +203,31 @@ Make your edits, then review the changes:
 git status
 git diff
 ```
-Stage your changes:
-```
-git add .
-```
-Commit them with a clear message:
+3. Staging changes:
+   
+    1. Stage all your changes with ".":
+    ```
+    git add .
+    ```
+  
+    2. Stage specific files:
+    ```
+    git add README.md
+    ```
+
+4. Commit them with a clear message:
 ```
 git commit -m "Add installation and Git contribution instructions"
 ```
-Push the branch:
-```
-git push -u origin descriptive-branch-name
-```
+5. Push the branch:
+    1. If you are pushing for the first time to the branch then use:
+    ```
+    git push -u origin descriptive-branch-name
+    ```
+    2. After the first push, future pushes on that branch can be done with:
+    ```
+    git push
+    ```
 
 ## If you are working directly on your own fork
 If you forked the project, your workflow may look like this:
