@@ -16,14 +16,23 @@ This project uses OpenFOAM to analyze airflow and thermal behavior around window
 ## Project Structure
 
 .
+
 ├── baseCase/ # Base OpenFOAM case
+
 ├── meshStudy/ # Mesh refinement studies
+
 │ ├── coarse/
+
 │ ├── medium/
+
 │ └── fine/
+
 ├── velocityStudy/ # Inlet velocity variations
+
 ├── system/ # Simulation control files
+
 ├── constant/ # Physical properties
+
 ├── 0/ # Initial conditions
 
 ---
