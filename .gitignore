@@ -1,3 +1,4 @@
+# This file contains all the files, file types and directories to ignore when pulling and pushing to the GitHub repository.
 # OpenFOAM generated time directories
 [1-9]*
 0.* 
