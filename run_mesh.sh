@@ -1,22 +1,16 @@
 #!/bin/bash
 
-//Inspiration for this structure came from the 3D_dampBreak tutorial by Wolf Dynamics World
+foamCleanTutorials
+rm -r 0 > /dev/null 2>&1
+rm -rf constant/polyMesh processor*
 
-// To clean out the folder of old run time time-stamps.
-foamCleanTutorials 
-// Removes the current 0 constants folder.
-rm -rf 0
-// Copies over the 0_org constants as the new 0 constants folder
-cp -r 0_org 0
+blockMesh -dict system/blockMeshDict | tee log.blockMesh
+surfaceFeatures | tee log.surfaceFeatures
 
-//blockMesh | tee log.blockMesh
-//surfaceFeatures | tee log.surfaceFeatures
-//snappyHexMesh -overwrite | tee log.shm
-//checkMesh | tee log.checkMesh
-// Removes the current 0 constants folder.
-rm -rf 0
-// Copies over the 0_org constants as the new 0 constants folder
-cp -r 0_org 0
-//setFields | tee log.setFields
-//createPatch -dict system/createPatchDict.0 -overwrite
-//createPatch -dict system/createPatchDict.1 -overwrite
+# To get the intermediate time-step directories from snappyHexMesh:
+snappyHexMesh -noOverwrite -dict system/snappyHexMeshDict | tee log.snappyHexMesh
+
+# To write the final snappyHexMesh result directly into constant/polyMesh instead:
+#snappyHexMesh -overwrite -dict system/snappyHexMeshDict | tee log.snappyHexMesh
+
+checkMesh -latestTime | tee log.checkMesh

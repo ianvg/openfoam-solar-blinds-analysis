@@ -1,0 +1,30 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  13                                    |
+|   \\  /    A nd           | Website:  https://openfoam.org                  |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeaturesDict;
+}
+
+surfaces ("Window_1.stl");
+
+// Feature edges are extracted where adjacent triangle normals differ enough.
+// This follows the reference case style, but targets the local STL.
+includedAngle 150;
+
+subsetFeatures
+{
+    nonManifoldEdges no;
+    openEdges        yes;
+}
+
+writeObj yes;
+
+// ************************************************************************* //

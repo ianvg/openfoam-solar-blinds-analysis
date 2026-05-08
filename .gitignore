@@ -6,8 +6,16 @@
 
 # Mesh and processor outputs
 processor*
+dynamicCode/
 constant/polyMesh
+constant/extendedFeatureEdgeMesh/
+constant/triSurface/*.eMesh
 !constant/polyMesh/blockMeshDict
+0/cellLevel
+0/pointLevel
+0/nSurfaceLayers
+0/thickness
+0/thicknessFraction
 
 # Logs
 log.*
@@ -25,3 +33,4 @@ postProcessing/
 *.swp
 .DS_Store
 Thumbs.db
+*:Zone.Identifier

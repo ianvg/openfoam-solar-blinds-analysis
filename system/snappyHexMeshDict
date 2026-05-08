@@ -1,0 +1,169 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  13                                    |
+|   \\  /    A nd           | Website:  https://openfoam.org                  |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+geometry
+{
+    Window_1.stl
+    {
+        type triSurfaceMesh;
+        file "Window_1.stl";
+        name window;
+
+        regions
+        {
+            Mesh
+            {
+                name window_wall;
+            }
+        }
+    }
+
+    windowRefinementBox
+    {
+        type searchableBox;
+        min (-0.5 -2.5 -2.5);
+        max ( 0.5  2.5  2.5);
+    }
+}
+
+castellatedMeshControls
+{
+    maxLocalCells       1000000;
+    maxGlobalCells      4000000;
+    minRefinementCells  0;
+    maxLoadUnbalance    0.10;
+    nCellsBetweenLevels 3;
+
+    features
+    (
+        {
+            file "Window_1.eMesh";
+            level 1;
+        }
+    );
+
+    refinementSurfaces
+    {
+        window
+        {
+            level (1 1);
+
+            regions
+            {
+                Mesh
+                {
+                    level (2 4);
+                    patchInfo
+                    {
+                        type wall;
+                    }
+                }
+            }
+        }
+    }
+
+    resolveFeatureAngle 30;
+    planarAngle         30;
+
+    refinementRegions
+    {
+        windowRefinementBox
+        {
+            mode inside;
+            levels ((1 1)); // ((1 0)) was ugly
+        }
+    }
+
+    // Keep the +x outside region around the closed STL.
+    locationInMesh (10 0 0);
+
+    allowFreeStandingZoneFaces true;
+}
+
+snapControls
+{
+    nSmoothPatch        3;
+    tolerance           2.0;
+    nSolveIter          30;
+    nRelaxIter          5;
+    nFeatureSnapIter    10;
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
+    multiRegionFeatureSnap false;
+}
+
+addLayersControls
+{
+    relativeSizes true;
+    expansionRatio 1.2;
+    finalLayerThickness 0.5;
+    minThickness 0.001;
+
+    layers
+    {
+        window_wall
+        {
+            nSurfaceLayers 3;
+        }
+    }
+
+    nGrow 0;
+    featureAngle 130;
+    maxFaceThicknessRatio 0.5;
+    nSmoothSurfaceNormals 1;
+    nSmoothThickness 10;
+    minMedialAxisAngle 90;
+    minMedianAxisAngle 90;
+    maxThicknessToMedialRatio 0.3;
+    nSmoothNormals 3;
+    nMedialAxisIter 10;
+    slipFeatureAngle 30;
+    nRelaxIter 5;
+    nBufferCellsNoExtrude 0;
+    nLayerIter 50;
+    nRelaxedIter 20;
+}
+
+meshQualityControls
+{
+    #include "meshQualityDict"
+
+    relaxed
+    {
+        maxNonOrtho 75;
+    }
+
+    nSmoothScale 4;
+    errorReduction 0.75;
+}
+
+debugFlags
+(
+);
+
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields
+);
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //
