@@ -1,4 +1,7 @@
 #!/bin/bash
+#To run use "bash run_solver.sh"
+set -euo pipefail #So we know if the first command out of two piped commands fails
+
 
 foamCleanTutorials
 rm -r 0 > /dev/null 2>&1

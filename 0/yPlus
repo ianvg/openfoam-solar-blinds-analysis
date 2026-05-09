@@ -32,19 +32,23 @@ boundaryField
     }
     minY
     {
-        type            symmetryPlane;
+        type            calculated;
+        value           uniform 0;
     }
     maxY
     {
-        type            symmetryPlane;
+        type            calculated;
+        value           uniform 0;
     }
     minZ
     {
-        type            symmetryPlane;
+        type            calculated;
+        value           uniform 0;
     }
     maxZ
     {
-        type            symmetryPlane;
+        type            calculated;
+        value           uniform 0;
     }
     window_wall
     {

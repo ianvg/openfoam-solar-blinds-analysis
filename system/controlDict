@@ -22,7 +22,7 @@ startTime       0;
 stopAt	writeNow;
 //stopAt          endTime;
 
-endTime         500;
+endTime         60;
 
 deltaT          1;
 

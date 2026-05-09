@@ -32,24 +32,29 @@ FoamFile
           type            zeroGradient;
       }
 
+//Ensure that the parameters below are in line with the blockMeshDict parameters.
       minY
       {
-          type            symmetryPlane;
+        type		slip;
+        //type            symmetryPlane;
       }
 
       maxY
       {
-          type            symmetryPlane;
+        type		slip;
+        //type            symmetryPlane;
       }
 
       minZ
       {
-          type            symmetryPlane;
+        type		slip;
+        //type            symmetryPlane;
       }
 
       maxZ
       {
-          type            symmetryPlane;
+        type		slip;
+        //type            symmetryPlane;
       }
 
       window_wall

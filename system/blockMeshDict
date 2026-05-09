@@ -94,10 +94,13 @@ boundary
             (1 5 6 2)
         );
     }
-
+         // While the first simulation was successful, the later iteration may not have 
+        //symmetry, so the available options here for the "edge" of the virtual wind tunnel would be either slip
+       	//or freestream conditions. 
     minY
     {
-        type symmetryPlane;
+    	type	patch;
+        //type symmetryPlane;
         faces
         (
             (0 4 5 1)
@@ -106,7 +109,8 @@ boundary
 
     maxY
     {
-        type symmetryPlane;
+    	type	patch;
+	//type symmetryPlane;
         faces
         (
             (3 2 6 7)
@@ -115,7 +119,8 @@ boundary
     
     minZ
     {
-        type symmetryPlane;
+        type	patch;
+        //type symmetryPlane;
 	faces
 	( 
             (0 3 2 1)
@@ -124,7 +129,8 @@ boundary
 
     maxZ
     {
-        type symmetryPlane;
+    	type	patch;
+        //type symmetryPlane;
 	faces
 	( 
             (4 5 6 7)
