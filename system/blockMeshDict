@@ -16,7 +16,7 @@ FoamFile
 
 convertToMeters 1;
 
-xmin -20; //inlet
+xmin -10; //inlet refer to COST 732 / Franke et al. best-practice guidance for urban CFD
 xmax  30; //outlet
 ymin -2.5;
 ymax  2.5;
@@ -29,16 +29,16 @@ zmax  2.5;
 //zcells 20;
 
 lx #calc "$xmax - $xmin";
-dx 0.25;
+dx 0.5;
 xcells #calc "abs(($lx)/($dx))";
 
 ly #calc "$ymax - $ymin";
-dy 0.25;
+dy 0.5;
 ycells #calc "abs(($ly)/($dy))";
 
 lz #calc "$zmax - $zmin";
 //dz 20;	//BL OK at bottom - Better mesh at corners at the bottom
-dz 0.25;		//BL colapses at bottom - Mesh at the bottom corners is uglier
+dz 0.5;		//BL colapses at bottom - Mesh at the bottom corners is uglier
 zcells #calc "abs(($lz)/($dz))";
 
 
@@ -74,8 +74,9 @@ edges
 
 boundary
 (
-// xmin originally
-    Inlet
+
+    inlet
+    // minX originally
     {
         type patch;
         faces
@@ -84,7 +85,8 @@ boundary
         );
     }
 
-    xmax
+    outlet
+    // xmax originally
     {
         type patch;
         faces
@@ -93,18 +95,18 @@ boundary
         );
     }
 
-    ymin
+    minY
     {
-        type patch;
+        type symmetryPlane;
         faces
         (
             (0 4 5 1)
         );
     }
 
-    ymax
+    maxY
     {
-        type patch;
+        type symmetryPlane;
         faces
         (
             (3 2 6 7)
@@ -113,7 +115,7 @@ boundary
     
     minZ
     {
-        type patch;
+        type symmetryPlane;
 	faces
 	( 
             (0 3 2 1)
@@ -122,7 +124,7 @@ boundary
 
     maxZ
     {
-        type patch;
+        type symmetryPlane;
 	faces
 	( 
             (4 5 6 7)

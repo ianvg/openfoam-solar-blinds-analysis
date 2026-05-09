@@ -18,3 +18,13 @@ createZones | tee log.createZones
 checkMesh -constant | tee log.checkMesh
 
 checkMesh -constant -allTopology | grep "cell zones"
+
+
+#Copy over everything from 0_org/ folder to 0/
+rm -rf 0
+cp -r 0_org 0
+
+#Running the solver below:
+foamRun -solver incompressibleFluid | tee log.solver
+
+foamPostProcess -solver incompressibleFluid -func yPlus -latestTime -noFunctionObjects | tee log.yPlus
