@@ -175,14 +175,23 @@ simpleFoam
 Depending on the solver and case configuration, additional preprocessing or different solvers may be required.
 
 ## Viewing results
-1. To inspect results in ParaView
+1. To inspect results in ParaView:
+From a simulation that was run using the serial option:
 ```
 paraFoam
+```
+From a simulation that was run using the parallel option:
+```
+paraFoam -builtin
 ```
 ## Contributing to the project
 1. Move into the repository:
 ```
 cd ~/OpenFOAM/projects/REPOSITORY
+```
+2. Before anything, check the status of your local copy:
+```
+git status
 ```
 2. Before making changes, update your local copy:
 ```
