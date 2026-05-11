@@ -1,5 +1,7 @@
 # OpenFOAM Solar Blinds Analysis
-The OpenFOAM version used here is based on OpenFOAM v13, available from the OpenFOAM Foundation; please note that the website is the .org version. Please note that a separately maintained branch of OpenFOAM is made available by OpenCFD LTD; please note that their website is the .com version. The OpenFOAM The download for OpenFOAM v13 can be found [here](https://cfd.direct/openfoam/download/). The guide for running OpenFOAM v13 can be found [here](https://doc.cfd.direct/openfoam/user-guide-v13/). To run OpenFOAM v13 on Windows requires the installation of WSL. Note that while OpenFOAM will work with multiple versions of Linux operating systems, OpenFOAM [specifically recommends](https://openfoam.org/download/windows/) that the Ubuntu 22.04 LTS to be used with OpenFOAM v13. 
+The OpenFOAM version used here is based on OpenFOAM v13, available from the OpenFOAM Foundation; please note that the website is the .org version. Please note that a separately maintained branch of OpenFOAM is made available by OpenCFD LTD; please note that their website is the .com version. The download for OpenFOAM v13 can be found [here](https://cfd.direct/openfoam/download/). The guide for running OpenFOAM v13 can be found [here](https://doc.cfd.direct/openfoam/user-guide-v13/). To run OpenFOAM v13 on Windows requires the installation of WSL. Note that while OpenFOAM will work with multiple versions of Linux operating systems, OpenFOAM [specifically recommends](https://openfoam.org/download/windows/) that the Ubuntu 22.04 LTS to be used with OpenFOAM v13. 
+
+There is an only Wiki, Forum and lots of youtube videos related to this topic for those interested in learning how to use OpenFoam.
 
 This project assumes contributors use **SSH** for GitHub authentification.
 
@@ -175,14 +177,23 @@ simpleFoam
 Depending on the solver and case configuration, additional preprocessing or different solvers may be required.
 
 ## Viewing results
-1. To inspect results in ParaView
+1. To inspect results in ParaView:
+From a simulation that was run using the serial option:
 ```
 paraFoam
+```
+From a simulation that was run using the parallel option:
+```
+paraFoam -builtin
 ```
 ## Contributing to the project
 1. Move into the repository:
 ```
 cd ~/OpenFOAM/projects/REPOSITORY
+```
+2. Before anything, check the status of your local copy:
+```
+git status
 ```
 2. Before making changes, update your local copy:
 ```
