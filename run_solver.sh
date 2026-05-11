@@ -47,7 +47,8 @@ foamRun -solver incompressibleFluid | tee log.solver
 #Decomposing the mesh to prepare it for running in parallel
 #Ensure that you have the minimum number of processors available for this job before running it!
 #decomposePar -force
-#mpirun -np 4 -solver incompressibleFluid -parallel | tee log.solver
+#Reminder that this number parameter needs to correspond with the decomposeParDict parameter
+#mpirun -np 4 foamRun -solver incompressibleFluid -parallel | tee log.solver
 #reconstructPar #To reconstruct the parallel case: 
 
 #######################################################

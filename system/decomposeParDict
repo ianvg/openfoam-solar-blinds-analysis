@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |				
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13                                   	
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      decomposeParDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+//Reminder that this number parameter needs to correspond with the run_solver.sh parameter
+numberOfSubdomains 4;
+
+method          scotch;
+
+/* 
+For the simple method of decomposition
+
+simpleCoeffs
+{
+    n               ( 4 2 1 );
+    delta           0.001;
+}
+*/
+
+/*
+For the hierarchical method of decomposition
+hierarchicalCoeffs
+{
+    n               ( 2 2 1 );
+    delta           0.001;
+    order           xyz;
+}
+*/
+// ************************************************************************* //
