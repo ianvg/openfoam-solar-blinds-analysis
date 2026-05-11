@@ -34,66 +34,140 @@ geometry
         }
     }
 
-    windowRefinementBox
+    windowRefinementBox //Used later for the refinement region.
     {
-        type searchableBox;
-        min (-0.5 -2.5 -2.5);
-        max ( 0.5  2.5  2.5);
+        type searchableBox; // As mentioned later, we could also use an .stl to define this region if we wanted to!
+        min (-0.5 -2.5 -2.5); //(-0.5m,x -2.5m,y -2.5m,z)
+        max ( 0.5  2.5  2.5); //(+0.5m,x +2.5m,y +2.5m,z)
     }
 }
 
+// Settings for the castellatedMesh generation.
 castellatedMeshControls
 {
-    maxLocalCells       1000000;
-    maxGlobalCells      4000000;
-    minRefinementCells  0;
-    maxLoadUnbalance    0.10;
-    nCellsBetweenLevels 3;
 
-    features
+	// Refinement parameters
+	// ~~~~~~~~~~~~~~~~~~~~~
+
+	maxLocalCells       1000000;
+
+	maxGlobalCells      4000000;
+
+	minRefinementCells  0;
+
+	maxLoadUnbalance    0.10;
+
+	nCellsBetweenLevels 3;
+
+	// Explicit feature edge refinement
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// Interesting to see the different kinds of feature edge refinement options that are possible.
+	features
     (
+
         {
             file "Window_1.eMesh";
             level 1;
         }
+
+/*   
+        {
+            file "surfacemesh.eMesh";
+            level 0;
+          //level 4;
+        }
+*/
+
+/*
+        {
+            file "onshape_all.eMesh";
+            level 0;
+          //level 4;
+        }
+*/
+
+/*
+        {
+            file "trimesh.eMesh";
+            level 0;
+          //level 4;
+        }
+*/
+
+/*
+        {
+            file "line1.eMesh";
+            level 4;
+        }
+*/
+
+/*
+        {
+            file "point1.eMesh";
+            level 4;
+        }
+*/
+
     );
 
-    refinementSurfaces
-    {
-        window
-        {
-            level (1 1);
+	// Surface based refinement
+	// ~~~~~~~~~~~~~~~~~~~~~~~~
 
-            regions
-            {
-                Mesh
-                {
-                    level (2 4);
-                    patchInfo
-                    {
-                        type wall;
-                    }
-                }
-            }
-        }
-    }
+	refinementSurfaces
+	{
+		window
+		{
+		// global
+		// Surface-wise min and max refinement level
+		// Recommended to not use more than (4 4) here. Too much memory consumption
+		// This refinement is done as function of the background mesh.
+		// Uniform level (e.g. level (2 2) or level (3 3), etc. is recommended
+		// as it is more likely to give you complete coverage.
+		level (2 2); // Originally, (1 1), but I'd like to try (2 2)
 
-    resolveFeatureAngle 30;
-    planarAngle         30;
+			regions
+			{
+				Mesh
+				{
+					level (2 4); //(2 4) the first digit control the global refinement level and the 2nd digit controls the curvature refinement level
+					// the 2nd digit is then based on the resolveFeatureAngle value
+					patchInfo
+					{
+						type wall;
+					}
+				}
+			}
+		}
+	}
+    
+
+
+	// Feature angle:
+	resolveFeatureAngle 30;		//recommended
+	//resolveFeatureAngle 60;		//To avoid too much refinement with curvature	
+	planarAngle         30;
+
+    // Region based refinement
+    // ~~~~~~~~~~~~~~~~~~~~~~~~
 
     refinementRegions
     {
-        windowRefinementBox
+        windowRefinementBox //name not type of refinement box. We could also read an .stl here if we wanted to.
         {
             mode inside;
-            levels ((1 1)); // ((1 0)) was ugly
+            //First value refers to distance from the surface, a large value would cover the whole region (inside the refinement region)
+            //Second value is the refinement level
+            levels ((1e15 1)); // ((1 0)) was ugly 
         }
     }
 
-    // Keep the +x outside region around the closed STL.
-    locationInMesh (10 0 0);
+	// Mesh selection
+	// ~~~~~~~~~~~~~~
 
-    allowFreeStandingZoneFaces true;
+	// Keep the +x outside region around the closed STL.
+	locationInMesh (10 0 0);
+
+	allowFreeStandingZoneFaces true;
 }
 
 snapControls
@@ -108,18 +182,25 @@ snapControls
     multiRegionFeatureSnap false;
 }
 
+// Settings for the layer addition.
 addLayersControls
 {
     relativeSizes true;
     expansionRatio 1.2;
-    finalLayerThickness 0.5;
-    minThickness 0.001;
+    // The final layer thickness of the boundary cell should be, e.g., 0.5 of the local undistorted
+    // cell size in the background mesh.
+    // Generally recommended as long as relative Sizes is true
+	finalLayerThickness 0.5;
+	
+	// Originally 0.001, but that seemed excessive.
+	minThickness 0.1; 
 
-    layers
-    {
-        window_wall
-        {
-            nSurfaceLayers 3;
+	layers
+	{
+		window_wall
+		{
+			// Number of boundary layers to use for the layer addition.
+            nSurfaceLayers 5; // Originally 3
         }
     }
 
@@ -132,25 +213,28 @@ addLayersControls
     minMedianAxisAngle 90;
     maxThicknessToMedialRatio 0.3;
     nSmoothNormals 3;
-    nMedialAxisIter 10;
-    slipFeatureAngle 30;
-    nRelaxIter 5;
-    nBufferCellsNoExtrude 0;
-    nLayerIter 50;
-    nRelaxedIter 20;
+	nMedialAxisIter 10;
+	slipFeatureAngle 30;
+	nRelaxIter 5;
+	nBufferCellsNoExtrude 0;
+	nLayerIter 50;
+	nRelaxedIter 20;
 }
 
 meshQualityControls
 {
-    #include "meshQualityDict"
+	#include "meshQualityDict"
 
-    relaxed
-    {
+	relaxed
+	{
         maxNonOrtho 75;
-    }
+	}
 
-    nSmoothScale 4;
-    errorReduction 0.75;
+	// Number of error distribution iterations
+	nSmoothScale 4;
+	
+	// amount to scale back displacement at error points
+    	errorReduction 0.75;
 }
 
 debugFlags
@@ -159,9 +243,9 @@ debugFlags
 
 writeFlags
 (
-    scalarLevels
-    layerSets
-    layerFields
+	scalarLevels
+	layerSets
+	layerFields
 );
 
 mergeTolerance 1e-6;

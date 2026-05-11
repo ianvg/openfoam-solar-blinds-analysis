@@ -50,22 +50,23 @@ zcells #calc "abs(($lz)/($dz))";
 //   - 20 m upstream of the window in the negative x direction
 //   - 30 m downstream of the window in the positive x direction
 //   - same width and height as the STL wall: 5 m by 5 m
+// As of 2026-05-09 the window begins at x=0 and is extruded in the positive x-axis direction. 
 
 vertices        
 (
-    ($xmin  $ymin  $zmin)
-    ($xmax  $ymin  $zmin)
-    ($xmax  $ymax  $zmin)
-    ($xmin  $ymax  $zmin)
-    ($xmin  $ymin  $zmax)
-    ($xmax  $ymin  $zmax)
-    ($xmax  $ymax  $zmax)
-    ($xmin  $ymax  $zmax)
+	($xmin  $ymin  $zmin)
+	($xmax  $ymin  $zmin)
+	($xmax  $ymax  $zmin)
+	($xmin  $ymax  $zmin)
+	($xmin  $ymin  $zmax)
+	($xmax  $ymin  $zmax)
+	($xmax  $ymax  $zmax)
+	($xmin  $ymax  $zmax)
 );
 
 blocks          
 (
-    hex (0 1 2 3 4 5 6 7) ($xcells $ycells $zcells) simpleGrading (1 1 1) // KEEP AT (1 1 1)
+	hex (0 1 2 3 4 5 6 7) ($xcells $ycells $zcells) simpleGrading (1 1 1) // KEEP AT (1 1 1)
 );
 
 edges
@@ -75,67 +76,67 @@ edges
 boundary
 (
 
-    inlet
-    // minX originally
-    {
-        type patch;
-        faces
-        (
-            (0 3 7 4)
-        );
-    }
+	inlet
+	// minX originally
+	{
+		type patch;
+		faces
+		(
+			(0 3 7 4)
+		);
+	}
 
-    outlet
-    // xmax originally
-    {
-        type patch;
-        faces
-        (
-            (1 5 6 2)
-        );
-    }
-         // While the first simulation was successful, the later iteration may not have 
+	outlet
+	// xmax originally
+	{
+		type patch;
+		faces
+		(
+			(1 5 6 2)
+		);
+	}
+	// While the first simulation was successful, the later iteration may not have 
         //symmetry, so the available options here for the "edge" of the virtual wind tunnel would be either slip
        	//or freestream conditions. 
-    minY
-    {
-    	type	patch;
-        //type symmetryPlane;
-        faces
-        (
-            (0 4 5 1)
-        );
-    }
+	minY
+	{
+		type	patch;
+		//type symmetryPlane;
+		faces
+		(
+			(0 4 5 1)
+		);
+	}
 
-    maxY
-    {
-    	type	patch;
-	//type symmetryPlane;
-        faces
-        (
-            (3 2 6 7)
-        );
-    }
+	maxY
+	{
+		type	patch;
+		//type symmetryPlane;
+		faces
+		(
+			(3 2 6 7)
+		);
+	}
     
-    minZ
-    {
-        type	patch;
-        //type symmetryPlane;
-	faces
-	( 
-            (0 3 2 1)
-	);
-    }
+	minZ
+	{
+		type	patch;
+		//type symmetryPlane;
+		faces
+		( 
+			(0 3 2 1)
+		);
+	}
 
-    maxZ
-    {
-    	type	patch;
-        //type symmetryPlane;
-	faces
-	( 
-            (4 5 6 7)
-	);
-    }
+	maxZ
+	{
+		type	patch;
+		//type symmetryPlane;
+		faces
+		( 
+			(4 5 6 7)
+		);
+	}
     
 );
 

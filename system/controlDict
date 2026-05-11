@@ -19,12 +19,12 @@ solver     incompressibleFluid;
 startFrom       startTime;
 startTime       0;
 
-stopAt	writeNow;
-//stopAt          endTime;
+//stopAt	writeNow; //Use this to gracefully end and save the simulation
+stopAt          endTime;
 
 endTime         60;
 
-deltaT          1;
+deltaT          0.5; //1 is a little coarse, so changing it to 0.05 
 
 writeControl    timeStep;
 writeInterval   1;
