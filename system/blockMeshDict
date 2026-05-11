@@ -100,8 +100,8 @@ boundary
        	//or freestream conditions. 
 	minY
 	{
-		type	patch;
-		//type symmetryPlane;
+		//type	patch;
+		type symmetryPlane;
 		faces
 		(
 			(0 4 5 1)
@@ -110,8 +110,8 @@ boundary
 
 	maxY
 	{
-		type	patch;
-		//type symmetryPlane;
+		//type	patch;
+		type symmetryPlane;
 		faces
 		(
 			(3 2 6 7)
@@ -120,8 +120,8 @@ boundary
     
 	minZ
 	{
-		type	patch;
-		//type symmetryPlane;
+		//type	patch;
+		type symmetryPlane;
 		faces
 		( 
 			(0 3 2 1)
@@ -130,8 +130,8 @@ boundary
 
 	maxZ
 	{
-		type	patch;
-		//type symmetryPlane;
+		//type	patch;
+		type symmetryPlane;
 		faces
 		( 
 			(4 5 6 7)

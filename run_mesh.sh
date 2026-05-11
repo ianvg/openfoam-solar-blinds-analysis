@@ -1,8 +1,16 @@
 #!/bin/bash
 
+#######################################################
+### Cleaning the case
+#######################################################
+
 foamCleanTutorials
 rm -r 0 > /dev/null 2>&1
 rm -rf constant/polyMesh processor*
+
+#######################################################
+### Creating and checking the mesh
+#######################################################
 
 blockMesh -dict system/blockMeshDict | tee log.blockMesh
 surfaceFeatures | tee log.surfaceFeatures

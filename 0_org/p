@@ -31,34 +31,35 @@ boundaryField
     }
 
 //Ensure that the parameters below are in line with the blockMeshDict parameters.
+// The 
     minY
     {
-        type		slip;
-        //type            symmetryPlane;
+        //type		slip;
+        type            symmetryPlane;
     }
 
     maxY
     {
-        type		slip;
-        //type            symmetryPlane;
+        //type		slip;
+        type            symmetryPlane;
     }
 
     minZ
     {
-        type		slip;
-        //type            symmetryPlane;
+        //type		slip;
+        type            symmetryPlane;
     }
 
     maxZ
     {
-        type		slip;
-        //type            symmetryPlane;
+        //type		slip;
+        type            symmetryPlane;
     }
 
-    window_wall
+    window_wall // Need to fix this is not right. Should be zeroGradient
     {
-        type		slip;
-        //type            symmetryPlane;
+	//type		noSlip;
+	type		zeroGradient;
     }
 }
 

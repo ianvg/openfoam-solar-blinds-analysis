@@ -15,7 +15,7 @@ FoamFile
 
 
 //Reminder that this number parameter needs to correspond with the run_solver.sh parameter
-numberOfSubdomains 4;
+numberOfSubdomains 8;
 
 method          scotch;
 

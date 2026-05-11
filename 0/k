@@ -37,23 +37,23 @@ boundaryField
 //Ensure that the parameters below are in line with the parameters in the blockMeshDict
     minY
     {
-        type		slip;
-        //type            symmetryPlane;
+        //type		slip;
+        type            symmetryPlane;
     }
     maxY
     {
-        type		slip;
-        //type            symmetryPlane;
+        //type		slip;
+        type            symmetryPlane;
     }
     minZ
     {
-        type		slip;
-        //type            symmetryPlane;
+        //type		slip;
+        type            symmetryPlane;
     }
     maxZ
     {
-        type		slip;
-        //type            symmetryPlane;
+        //type		slip;
+        type            symmetryPlane;
     }
     window_wall
     {

@@ -46,6 +46,37 @@ functions
 {
 
 ///////////////////////////////////////////////////////////////////////////
+/// Function
+///////////////////////////////////////////////////////////////////////////
+
+windowOpeningFlowRate
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+
+	log             true;
+	writeControl    timeStep;
+	writeInterval   1;
+	
+	writeFields	true; // I'm interested in this value
+	surfaceFormat	vtk;
+
+	sampledSurface
+	{
+		type        triSurface;
+		surface     "samplingSTL.stl";
+		source      cells;
+		interpolate true;
+	}
+
+	operation       areaNormalIntegrate;
+
+	fields          (U);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////
 /*
     inMassFlow
     {
