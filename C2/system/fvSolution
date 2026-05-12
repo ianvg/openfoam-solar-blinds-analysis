@@ -1,0 +1,184 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |				
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13                                   	
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location	"system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+solvers
+{
+
+/*
+    p
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        relTol          0;
+	    minIter 	    2;
+    }
+*/
+
+    p
+    {
+        solver           GAMG;
+        tolerance        1e-6;
+        relTol           0.001;
+        smoother         GaussSeidel;
+        //smoother	DICGaussSeidel; // Maybe?
+        nPreSweeps       0;
+        nPostSweeps      2;
+        cacheAgglomeration on;
+        agglomerator     faceAreaPair;
+        nCellsInCoarsestLevel 100;
+        mergeLevels      1;
+
+	minIter 	     2;
+    }
+
+    pFinal
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        relTol          0;
+	minIter		    3;
+    }
+
+    U
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+	minIter		    3;
+    }
+
+/*
+    U
+    {
+        type            coupled;
+        solver          PBiCCCG;
+        preconditioner  DILU;
+        tolerance       (1e-08 1e-08 1e-08);
+        relTol          (0 0 0);
+    }
+*/
+
+
+    UFinal
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+	minIter		    3;
+    }
+
+    epsilon
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+	minIter		    3;
+    }
+
+    epsilonFinal
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+	minIter		    3;
+    }
+
+    k
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+	minIter		    3;
+    }
+
+    kFinal
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+	minIter		    3;
+    }
+}
+
+//PIMPLE //Original
+SIMPLE
+{
+/*
+    momentumPredictor 	yes;
+    consistent 		yes; 
+
+//If you set nOuterCorrectors to 1 is equivalent to piso    
+    //nOuterCorrectors 1;
+    nOuterCorrectors 2;
+
+    nCorrectors 2;
+    nNonOrthogonalCorrectors 1;
+
+    //pRefCell        0;
+    //pRefValue       0;
+*/
+	nNonOrthogonalCorrectors	1;
+	
+	residualControl
+	{
+		p	1e-4;
+		U	1e-5;
+		k	1e-5;
+		epsilon	1e-5;
+	}
+
+}
+
+//Recommended for SIMPLE formulation
+relaxationFactors
+{
+    fields
+    {
+        p   	0.3;  // ensure diagonal equality
+    }
+    equations
+    {
+        U   	0.7;  // ensure diagonal equality
+        k   	0.7;  // ensure diagonal equality
+        epsilon   0.7;  // ensure diagonal equality
+    }
+}
+
+
+/*
+//Recommended for SIMPLEC formulation
+relaxationFactors
+{
+    fields
+    {
+        ".*"   0.9;  // ensure diagonal equality
+    }
+    equations
+    {
+        ".*"   0.9;  // ensure diagonal equality
+    }
+}
+*/
+// ************************************************************************* //
