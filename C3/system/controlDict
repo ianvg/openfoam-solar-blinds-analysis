@@ -49,6 +49,33 @@ functions
 /// Function
 ///////////////////////////////////////////////////////////////////////////
 
+windowOpeningFlowRateCutPlane
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+
+	log             true;
+	writeControl    timeStep;
+	writeInterval   1;
+	
+	writeFields	true; // I'm interested in this value
+	surfaceFormat	vtk;
+
+	sampledSurface
+	{
+		type	cutPlane;
+		planeType	pointAndNormal;
+		point	(0 0 0);
+		normal	(1 0 0);
+		interpolate	true;
+	}
+
+	operation       areaNormalIntegrate;
+
+	fields          (U);
+}
+
+
 windowOpeningFlowRate
 {
 	type            surfaceFieldValue;

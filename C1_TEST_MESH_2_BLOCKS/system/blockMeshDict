@@ -1,0 +1,271 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  13                                    |
+|   \\  /    A nd           | Website:  https://openfoam.org                  |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+
+// Block 1
+xmin -10; //inlet refer to COST 732 / Franke et al. best-practice guidance for urban CFD
+xmax  0.05; //outlet
+ymin -2.5;
+ymax  2.5;
+zmin -2.5;
+zmax  2.5;
+
+// Block 2
+xmin2 0.05; //inlet refer to COST 732 / Franke et al. best-practice guidance for urban CFD
+xmax2 30; //outlet
+ymin2 -2.5;
+ymax2  2.5;
+zmin2 -2.5;
+zmax2  2.5;
+
+
+
+//xcells 20;
+//ycells 20;
+//zcells 20;
+
+// Block 1 number of cells
+
+lx #calc "$xmax - $xmin";
+dx 0.5; //Originally 0.5
+//dx 1;
+xcells #calc "abs(($lx)/($dx))";
+
+ly #calc "$ymax - $ymin";
+dy 0.5; //Originally 0.5
+//dy 1;
+ycells #calc "abs(($ly)/($dy))";
+
+lz #calc "$zmax - $zmin";
+//dz 20;	//BL OK at bottom - Better mesh at corners at the bottom
+dz 0.5;	//Originally 0.5	//BL colapses at bottom - Mesh at the bottom corners is uglier
+//dz 1;
+zcells #calc "abs(($lz)/($dz))";
+
+
+// Block 2 number of cells
+
+lx2 #calc "$xmax2 - $xmin2";
+dx2 0.5; //Originally 0.5
+//dx 1;
+xcells2 #calc "abs(($lx2)/($dx2))";
+
+ly2 #calc "$ymax2 - $ymin2";
+dy2 0.5; //Originally 0.5
+//dy 1;
+ycells2 #calc "abs(($ly2)/($dy2))";
+
+lz2 #calc "$zmax2 - $zmin2";
+//dz 20;	//BL OK at bottom - Better mesh at corners at the bottom
+dz2 0.5;	//Originally 0.5	//BL colapses at bottom - Mesh at the bottom corners is uglier
+//dz 1;
+zcells2 #calc "abs(($lz2)/($dz2))";
+
+
+// Background mesh for snappyHexMesh around constant/triSurface/Window_1.stl.
+// The STL bounds are approximately:
+//     min (0 -2.5 -2.5), max (0.1 2.5 2.5)
+//
+// Requested domain:
+//   - 20 m upstream of the window in the negative x direction
+//   - 30 m downstream of the window in the positive x direction
+//   - same width and height as the STL wall: 5 m by 5 m
+// As of 2026-05-09 the window begins at x=0 and is extruded in the positive x-axis direction. 
+
+vertices        
+(
+	($xmin  $ymin  $zmin)
+	($xmax  $ymin  $zmin)
+	($xmax  $ymax  $zmin)
+	($xmin  $ymax  $zmin)
+	($xmin  $ymin  $zmax)
+	($xmax  $ymin  $zmax)
+	($xmax  $ymax  $zmax)
+	($xmin  $ymax  $zmax)
+);
+
+vertices        
+(
+	($xmin2  $ymin2  $zmin2)
+	($xmax2  $ymin2  $zmin2)
+	($xmax2  $ymax2  $zmin2)
+	($xmin2  $ymax2  $zmin2)
+	($xmin2  $ymin2  $zmax2)
+	($xmax2  $ymin2  $zmax2)
+	($xmax2  $ymax2  $zmax2)
+	($xmin2  $ymax2  $zmax2)
+);
+
+//Block 1
+blocks          
+(
+	hex (0 1 2 3 4 5 6 7) ($xcells $ycells $zcells) simpleGrading (1 1 1) // KEEP AT (1 1 1)
+);
+
+//Block 2
+blocks          
+(
+	hex (0 1 2 3 4 5 6 7) ($xcells2 $ycells2 $zcells2) simpleGrading (1 1 1) // KEEP AT (1 1 1)
+);
+
+
+edges
+(
+);
+
+boundary
+(
+
+	inlet
+	// minX originally
+	{
+		type patch;
+		faces
+		(
+			(0 3 7 4)
+		);
+	}
+
+	outlet
+	// xmax originally
+	{
+		type patch;
+		faces
+		(
+			(1 5 6 2)
+		);
+	}
+	// While the first simulation was successful, the later iteration may not have 
+        //symmetry, so the available options here for the "edge" of the virtual wind tunnel would be either slip
+       	//or freestream conditions. 
+	minY
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		(
+			(0 4 5 1)
+		);
+	}
+
+	maxY
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		(
+			(3 2 6 7)
+		);
+	}
+    
+	minZ
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		( 
+			(0 3 2 1)
+		);
+	}
+
+	maxZ
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		( 
+			(4 5 6 7)
+		);
+	}
+    
+);
+
+//Block 2
+boundary
+(
+
+	inlet
+	// minX originally
+	{
+		type patch;
+		faces
+		(
+			(0 3 7 4)
+		);
+	}
+
+	outlet
+	// xmax originally
+	{
+		type patch;
+		faces
+		(
+			(1 5 6 2)
+		);
+	}
+	// While the first simulation was successful, the later iteration may not have 
+        //symmetry, so the available options here for the "edge" of the virtual wind tunnel would be either slip
+       	//or freestream conditions. 
+	minY
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		(
+			(0 4 5 1)
+		);
+	}
+
+	maxY
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		(
+			(3 2 6 7)
+		);
+	}
+    
+	minZ
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		( 
+			(0 3 2 1)
+		);
+	}
+
+	maxZ
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		( 
+			(4 5 6 7)
+		);
+	}
+    
+);
+
+
+mergePatchPairs 
+(
+);
+
+// ************************************************************************* //

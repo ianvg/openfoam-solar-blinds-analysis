@@ -1,0 +1,479 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |                                                 
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           
+   \\    /   O peration     | Website:  https://openfoam.org                                                
+    \\  /    A nd           | Version:  13                                                
+     \\/     M anipulation  |                                                 
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solver     incompressibleFluid;
+
+startFrom       startTime;
+startTime       0;
+
+//stopAt	writeNow; //Use this to gracefully end and save the simulation
+stopAt          endTime;
+
+endTime         60;
+
+deltaT          0.5; //1 is a little coarse, so changing it to 0.05 
+
+writeControl    timeStep;
+writeInterval   1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+writePrecision  6;
+writeCompression off;
+
+timeFormat      general;
+timePrecision   6;
+
+runTimeModifiable true;
+
+// ************************************************************************* //
+
+functions
+{
+
+///////////////////////////////////////////////////////////////////////////
+/// Function
+///////////////////////////////////////////////////////////////////////////
+windowOpeningFlowRateCutPlane
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+
+	log             true;
+	writeControl    timeStep;
+	writeInterval   1;
+	
+	writeFields	true; // I'm interested in this value
+	surfaceFormat	vtk;
+
+	sampledSurface
+	{
+		type	cutPlane;
+		planeType	pointAndNormal;
+		point	(0.05 0 0);
+		normal	(1 0 0);
+		interpolate	true;
+	}
+
+	operation       areaNormalIntegrate;
+
+	fields          (U);
+}
+
+windowOpeningFlowRateCutPlane2
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+
+	log             true;
+	writeControl    timeStep;
+	writeInterval   1;
+	
+	writeFields	true; // I'm interested in this value
+	surfaceFormat	vtk;
+
+	sampledSurface
+	{
+		type	cutPlane;
+		planeType	pointAndNormal;
+		point	(-2.5 0 0);
+		normal	(1 0 0);
+		interpolate	true;
+	}
+
+	operation       areaNormalIntegrate;
+
+	fields          (U);
+}
+
+windowOpeningFlowRatePhi
+{
+	type        surfaceFieldValue;
+	libs        ("libfieldFunctionObjects.so");
+
+	log         true;
+	writeControl timeStep;
+	writeInterval 1;
+
+	writeFields	true;
+	surfaceFormat vtk;
+
+	faceZone    windowOpeningZone;
+	//operation   sum;
+	//operation	orientedSum;
+	operation	sumMag;
+	fields      (phi);
+	//operation	areaNormalIntegrate;
+	//fields		(U);
+}
+
+
+
+windowOpeningFlowRate
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+
+	log             true;
+	writeControl    timeStep;
+	writeInterval   1;
+	
+	writeFields	true; // I'm interested in this value
+	surfaceFormat	vtk;
+
+	sampledSurface
+	{
+		type        triSurface;
+		surface     "samplingSTL.stl";
+		source      cells;
+		interpolate true;
+	}
+
+	operation       areaNormalIntegrate;
+
+	fields          (U);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////
+/*
+    inMassFlow
+    {
+        type            surfaceFieldValue;
+        libs ("libfieldFunctionObjects.so");
+        enabled         false;
+
+//        writeControl     outputTime;
+	writeControl   timeStep;
+	writeInterval  1;
+
+        log             true;
+
+        writeFields     false;
+
+        //regionType          patch;
+        //name      in;
+        patch		in;
+
+	operation       sum;
+        fields
+        (
+            phi
+        );
+    }
+*/
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+/*
+    outMassFlow
+    {
+        type            surfaceFieldValue;
+        libs ("libfieldFunctionObjects.so");
+        enabled         false;
+
+//      writeControl     outputTime;
+
+	writeControl   timeStep;
+	writeInterval  1;
+
+        log             yes;
+
+        writeFields     false;
+
+        //writeFields     true;
+        //surfaceFormat   raw;
+
+        //regionType          patch;
+        //name      out;
+        patch		out;
+
+	operation       sum;
+        fields
+        (
+            phi
+        );
+    }
+*/
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+    additional_fields
+    {
+        type writeRegisteredObject;
+        libs ( "libIOFunctionObjects.so" );
+
+	//Remember, when in doubt, use bananas        
+	//objectNames ("bananas");
+	  objectNames ("U_0");
+	//objectNames ("y");
+
+        enabled         false;
+
+        timeStart       100;
+        timeEnd         200;
+
+        writeControl     outputTime;
+
+/*
+	writeControl   timeStep;
+	writeInterval  1;
+*/
+    }
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+
+    fieldAverage
+    {
+        type            fieldAverage;
+        libs ("libfieldFunctionObjects.so");
+        enabled         false; //true or false
+        writeControl   outputTime;
+
+//writeControl   timeStep;
+//writeInterval  100;
+
+//cleanRestart true;
+
+/*
+        timeStart       20;
+        timeEnd         200;
+*/
+
+        fields
+        (
+            U
+            {
+                mean        on;
+                prime2Mean  on;
+                base        time;
+            }
+
+            p
+            {
+                mean        on;
+                prime2Mean  on;
+                base        time;
+            }
+        );
+    }
+
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+/*
+forces_object
+{
+	type forces;
+	libs ("libforces.so");
+
+        enabled         false;
+
+	//writeControl outputTime;
+	writeControl   timeStep;
+	writeInterval  1;
+
+	//// Patches to sample
+	//patches ("body1" "body2" "body3");
+	patches ("cylinder");
+
+	//// Name of fields
+	pName p;
+	Uname U;
+
+	//// Density
+	rho rhoInf;
+	rhoInf 1.225;
+
+	//// Centre of rotation
+	CofR (0 0 0);
+}
+*/
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+
+forceCoeffs_object
+{
+	// rhoInf - reference density
+	// CofR - Centre of rotation
+	// dragDir - Direction of drag coefficient
+	// liftDir - Direction of lift coefficient
+	// pitchAxis - Pitching moment axis
+	// magUinf - free stream velocity magnitude
+	// lRef - reference length
+	// Aref - reference area
+	type forceCoeffs;
+	libs ("libforces.so");
+	//patches ("body1" "body2" "body3");
+	patches (window_wall);
+
+	p p; //Originally pName p;
+	U U; //Originally Uname U;
+	rho rhoInf;
+	rhoInf 1.0;
+
+	//// Dump to file
+	log true;
+
+	CofR (0.0 0 0);
+	liftDir (0 0 1);// Originally (0 1 0)
+	dragDir (1 0 0);
+	pitchAxis (0 1 0); //Originally (0 0 1)
+	
+	magUInf 5.0; // This should the same as the velocity condition.
+	lRef 5.0;         // reference lenght, originally 1.0
+	Aref 25.0;         // Reference area for the window (5m x 5m)
+
+        writeControl   timeStep;
+        writeInterval  1;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+
+yplus
+{
+    type                yPlus;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled true;
+
+    writeControl outputTime;
+    //writeControl timeStep;
+    //writeInterval 1;
+
+    //log true;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+//OF8
+/*
+minmaxdomain
+{
+	type fieldMinMax;
+	//type banana;
+
+	functionObjectLibs ("libfieldFunctionObjects.so");
+
+	enabled true;
+
+	mode component;
+
+	writeControl timeStep;
+	writeInterval 1;
+
+	log true;
+
+	fields (p U k omega);
+      //fields (p U y);
+}
+*/
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+
+minmaxdomain_scalar
+{
+    type            volFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled 	    false; 	//true or false
+    log             true;	//write to screen
+    
+    //writeControl    writeTime;
+    writeControl    timeStep;
+    writeInterval   1;
+
+    writeFields     false;	//write solution to field value - Not needed when only reporting value to screen
+
+    writeLocation   true;	//write location in the output file
+
+    //mode component;
+
+    //regionType      all;
+    cellZone		all;
+
+    operation       none;
+
+    fields
+    (
+        p k epsilon nut
+    );
+}
+
+minmaxdomain_vector
+{
+    type            volFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled 	    false; 	//true or false
+    log             true;	//write to screen
+    
+    //writeControl    writeTime;
+    writeControl    timeStep;
+    writeInterval   1;
+
+    writeFields     false;	//write solution to field value - Not needed when only reporting value to screen
+
+    writeLocation   true;	//write location in the output file
+
+    //mode component;
+
+    //regionType      all;
+    cellZone		all;
+
+    operation       none;
+
+    fields
+    (
+        U
+    );
+}
+
+mindomain_scalar
+{
+    $minmaxdomain_scalar
+    operation       min;
+}
+
+mindomain_vector
+{
+    $minmaxdomain_vector
+    operation       minMag;
+}
+
+maxdomain_scalar
+{
+    $minmaxdomain_scalar
+    operation       max;
+}
+
+maxdomain_vector
+{
+    $minmaxdomain_vector
+    operation       maxMag;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+};

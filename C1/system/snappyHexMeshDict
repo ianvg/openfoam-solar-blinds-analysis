@@ -33,8 +33,24 @@ geometry
             }
         }
     }
+    
+    
+    windowOpening.stl
+    {
+        type triSurfaceMesh;
+        file "windowOpening.stl";
+        name windowOpening;
 
-    windowRefinementBox //Used later for the refinement region.
+        regions
+        {
+            Mesh
+            {
+                name window_opening;
+            }
+        }
+    }
+
+    windowRefinementBox //Use noSlip ed later for the refinement region.
     {
         type searchableBox; // As mentioned later, we could also use an .stl to define this region if we wanted to!
         min (-0.5 -2.5 -2.5); //(-0.5m,x -2.5m,y -2.5m,z)
@@ -135,6 +151,23 @@ castellatedMeshControls
 					{
 						type wall;
 					}
+				}
+			}
+		}
+		
+		
+		windowOpening
+		{
+			level (0 0);
+			
+			faceZone	windowOpeningZone
+			faceType	internal;
+			
+			regions
+			{
+				Mesh
+				{
+					level (0 0);
 				}
 			}
 		}
