@@ -1,0 +1,48 @@
+  /*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |                                                 
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           
+   \\    /   O peration     | Website:  https://openfoam.org                                                
+    \\  /    A nd           | Version:  13                                                
+     \\/     M anipulation  |                                                 
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functionObject;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+  
+  windowOpening_flowRate
+  {
+      type            surfaceFieldValue;
+      libs            ("libfieldFunctionObjects.so");
+      enabled         true;
+
+      writeControl    timeStep;
+      writeInterval   1;
+
+      log             true;
+      writeFields     false;
+
+      regionType      sampledSurface;
+      name            windowOpening;
+
+      sampledSurface
+      {
+          type        triSurfaceMesh;
+          surface     "windowOpeningparaview0.stl";
+          //source	boundaryFaces;
+          //source	insideCells;
+          source      cells;
+          interpolate true;
+      }
+
+      operation       areaNormalIntegrate;
+
+      fields
+      (
+          U
+      );
+  }

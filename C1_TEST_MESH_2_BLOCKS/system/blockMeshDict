@@ -87,40 +87,36 @@ zcells2 #calc "abs(($lz2)/($dz2))";
 //   - same width and height as the STL wall: 5 m by 5 m
 // As of 2026-05-09 the window begins at x=0 and is extruded in the positive x-axis direction. 
 
-vertices        
-(
-	($xmin  $ymin  $zmin)
-	($xmax  $ymin  $zmin)
-	($xmax  $ymax  $zmin)
-	($xmin  $ymax  $zmin)
-	($xmin  $ymin  $zmax)
-	($xmax  $ymin  $zmax)
-	($xmax  $ymax  $zmax)
-	($xmin  $ymax  $zmax)
-);
+/*
 
 vertices        
 (
-	($xmin2  $ymin2  $zmin2)
-	($xmax2  $ymin2  $zmin2)
-	($xmax2  $ymax2  $zmin2)
-	($xmin2  $ymax2  $zmin2)
-	($xmin2  $ymin2  $zmax2)
-	($xmax2  $ymin2  $zmax2)
-	($xmax2  $ymax2  $zmax2)
-	($xmin2  $ymax2  $zmax2)
+	($xmin  $ymin  $zmin) // 0
+	($xmax  $ymin  $zmin) // 1
+	($xmax  $ymax  $zmin) // 2
+	($xmin  $ymax  $zmin) // 3
+	($xmin  $ymin  $zmax) // 4
+	($xmax  $ymin  $zmax) // 5
+	($xmax  $ymax  $zmax) // 6
+	($xmin  $ymax  $zmax) // 7
+
+ 	($xmax  $ymin  $zmin)  // 8, or 1
+	($xmax2  $ymin  $zmin) // 8
+	($xmax2  $ymax  $zmin) // 9
+	($xmax  $ymax  $zmin) // 11, or 2
+	($xmax  $ymin  $zmax) // 12, or 5
+	($xmax2  $ymin  $zmax) // 10
+	($xmax2  $ymax  $zmax) // 11
+	($xmax  $ymax  $zmax) // 15, or 6
 );
 
 //Block 1
 blocks          
 (
 	hex (0 1 2 3 4 5 6 7) ($xcells $ycells $zcells) simpleGrading (1 1 1) // KEEP AT (1 1 1)
-);
 
 //Block 2
-blocks          
-(
-	hex (0 1 2 3 4 5 6 7) ($xcells2 $ycells2 $zcells2) simpleGrading (1 1 1) // KEEP AT (1 1 1)
+	hex (8 9 10 11 12 13 14 15) ($xcells2 $ycells2 $zcells2) simpleGrading (1 1 1) // KEEP AT (1 1 1)
 );
 
 
@@ -192,76 +188,161 @@ boundary
 			(4 5 6 7)
 		);
 	}
-    
-);
 
 //Block 2
-boundary
-(
 
-	inlet
+	inlet2
 	// minX originally
 	{
 		type patch;
 		faces
 		(
-			(0 3 7 4)
+			(8 11 15 12)
 		);
 	}
 
-	outlet
+	outlet2
 	// xmax originally
 	{
 		type patch;
 		faces
 		(
-			(1 5 6 2)
+			(9 13 14 10)
 		);
 	}
 	// While the first simulation was successful, the later iteration may not have 
         //symmetry, so the available options here for the "edge" of the virtual wind tunnel would be either slip
        	//or freestream conditions. 
-	minY
+	minY2
 	{
 		//type	patch;
 		type symmetryPlane;
 		faces
 		(
-			(0 4 5 1)
+			(8 12 13 9)
 		);
 	}
 
-	maxY
+	maxY2
 	{
 		//type	patch;
 		type symmetryPlane;
 		faces
 		(
-			(3 2 6 7)
+			(11 10 14 15)
 		);
 	}
     
-	minZ
+	minZ2
 	{
 		//type	patch;
 		type symmetryPlane;
 		faces
 		( 
-			(0 3 2 1)
+			(8 9 10 11)
 		);
 	}
 
-	maxZ
+	maxZ2
 	{
 		//type	patch;
 		type symmetryPlane;
 		faces
 		( 
-			(4 5 6 7)
+			(12 15 14 13)
 		);
 	}
     
 );
+*/
+
+  vertices
+  (
+      ($xmin  $ymin  $zmin) // 0
+      ($xmax  $ymin  $zmin) // 1
+      ($xmax  $ymax  $zmin) // 2
+      ($xmin  $ymax  $zmin) // 3
+      ($xmin  $ymin  $zmax) // 4
+      ($xmax  $ymin  $zmax) // 5
+      ($xmax  $ymax  $zmax) // 6
+      ($xmin  $ymax  $zmax) // 7
+
+      ($xmax2 $ymin  $zmin) // 8
+      ($xmax2 $ymax  $zmin) // 9
+      ($xmax2 $ymin  $zmax) // 10
+      ($xmax2 $ymax  $zmax) // 11
+  );
+
+  blocks
+  (
+      hex (0 1 2 3 4 5 6 7)      ($xcells  $ycells  $zcells)  simpleGrading (1 1 1)
+      hex (1 8 9 2 5 10 11 6)    ($xcells2 $ycells2 $zcells2) simpleGrading (1 1 1)
+  );
+
+  //Then remove outlet for block 1 and remove inlet2 for block 2. The shared face (1 2 6 5) becomes internal.
+
+  //Use boundary like this:
+
+  boundary
+  (
+      inlet
+      {
+          type patch;
+          faces
+          (
+              (0 3 7 4)
+          );
+      }
+
+      outlet
+      {
+          type patch;
+          faces
+          (
+              (8 10 11 9)
+          );
+      }
+
+      minY
+      {
+          type symmetryPlane;
+          faces
+          (
+              (0 4 5 1)
+              (1 5 10 8)
+          );
+      }
+
+      maxY
+      {
+          type symmetryPlane;
+          faces
+          (
+              (3 2 6 7)
+              (2 9 11 6)
+          );
+      }
+
+      minZ
+      {
+          type symmetryPlane;
+          faces
+          (
+              (0 1 2 3)
+              (1 8 9 2)
+          );
+      }
+
+      maxZ
+      {
+          type symmetryPlane;
+          faces
+          (
+              (4 7 6 5)
+              (5 6 11 10)
+          );
+      }
+  );
 
 
 mergePatchPairs 

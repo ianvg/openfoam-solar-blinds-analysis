@@ -10,3 +10,5 @@ Assumes that the surrounding boundary conditions are noSlip
 Assumes that the surrounding boundary conditions are slip.
 
 
+## C4
+First case try to mesh room, window and door.

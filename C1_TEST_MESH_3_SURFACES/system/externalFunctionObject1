@@ -1,0 +1,57 @@
+  /*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |                                                 
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           
+   \\    /   O peration     | Website:  https://openfoam.org                                                
+    \\  /    A nd           | Version:  13                                                
+     \\/     M anipulation  |                                                 
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functionObject;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+  
+  windowOpening_flowRate_distanceSurface
+  {
+      type            surfaceFieldValue;
+      libs            ("libfieldFunctionObjects.so");
+      enabled         true;
+
+      writeControl    timeStep;
+      writeInterval   1;
+
+      log             true;
+      writeFields     false;
+
+      regionType      sampledSurface;
+      name            windowOpeningDistanceSurface;
+
+      sampledSurface
+      {
+          type        distanceSurface;
+          
+		// Finite reference surface matching windowOpening.stl:
+		// x = 0.05, y = [-1, 1], z = [-1, 1].
+          //surface     "windowOpening.stl";
+          surfaceType	plate;
+          origin	(0.05 -1 -1);
+          span		(0 2 2);
+          //source      insideCells;
+          source		aboundaryFaces;
+          distance		0.04;
+          signed		no;
+          interpolate false;
+          regularise false;
+      }
+
+      //operation       areaNormalIntegrate;
+      operation       areaIntegrate;
+
+      fields
+      (
+          U
+      );
+  }
