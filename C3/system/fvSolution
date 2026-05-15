@@ -32,7 +32,7 @@ solvers
     p
     {
         solver           GAMG;
-        tolerance        1e-6;
+        tolerance        1e-5; //Changed from 1e-6
         relTol           0.001;
         smoother         GaussSeidel;
         //smoother	DICGaussSeidel; // Maybe?
@@ -42,17 +42,17 @@ solvers
         agglomerator     faceAreaPair;
         nCellsInCoarsestLevel 100;
         mergeLevels      1;
-
-	minIter 	     2;
+	//minIter 	     2;
     }
 
     pFinal
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
+    	$p;	// Inherit settings from p.
+        //solver          PCG;
+        //preconditioner  DIC;
+        //tolerance       1e-06;
         relTol          0;
-	minIter		    3;
+	//minIter		    3;
     }
 
     U
@@ -60,8 +60,8 @@ solvers
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-08;
-        relTol          0;
-	minIter		    3;
+        relTol          0.001; //Changed from 0.
+	//minIter		    3;
     }
 
 /*
@@ -78,11 +78,12 @@ solvers
 
     UFinal
     {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-        tolerance       1e-08;
+    	$U; // Inherit settings from U
+        //solver          PBiCGStab;
+        //preconditioner  DILU;
+        //tolerance       1e-08;
         relTol          0;
-	minIter		    3;
+	//minIter		    3;
     }
 
     epsilon
