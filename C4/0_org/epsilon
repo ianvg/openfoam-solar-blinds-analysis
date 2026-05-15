@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |				
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9                                   	
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location	"0";
+    object      epsilon;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+  dimensions      [0 2 -3 0 0 0 0];
+
+  internalField   uniform 0.0135;
+
+  boundaryField
+  {
+      inlet
+      {
+          type            fixedValue;
+          value           uniform 0.0135;
+      }
+
+      outlet
+      {
+          type            zeroGradient;
+      }
+
+//Ensure that the parameters below are in line with the blockMeshDict parameters.
+      minY
+      {
+          type            epsilonWallFunction;
+          value           uniform 0.0135;
+        //type            symmetryPlane;
+      }
+
+      maxY
+      {
+          type            epsilonWallFunction;
+          value           uniform 0.0135;
+        //type            symmetryPlane;
+      }
+
+      minZ
+      {
+          type            epsilonWallFunction;
+          value           uniform 0.0135;
+        //type            symmetryPlane;
+      }
+
+      maxZ
+      {
+          type            epsilonWallFunction;
+          value           uniform 0.0135;
+        //type            symmetryPlane;
+      }
+
+      window_wall
+      {
+          type            epsilonWallFunction;
+          value           uniform 0.0135;
+      }
+  }
+
+  // ************************************************************************* //
+
