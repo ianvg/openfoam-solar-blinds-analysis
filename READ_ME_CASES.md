@@ -3,6 +3,9 @@
 ## C1
 Assumes that the surrounding boundary conditions are symmetry.
 
+## C1 Test cases
+This is where I was playing around and understanding how to use sampling, points, lines, and surfaces.
+
 ## C2
 Assumes that the surrounding boundary conditions are noSlip 
 
