@@ -11,4 +11,4 @@ Assumes that the surrounding boundary conditions are slip.
 
 
 ## C4
-First case try to mesh room, window and door.
+First case try to mesh room, window and door. This is where the mesh sensitivity analysis is done.
