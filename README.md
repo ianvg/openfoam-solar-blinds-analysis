@@ -1,9 +1,9 @@
 # OpenFOAM Solar Blinds Analysis
-The OpenFOAM version used here is based on OpenFOAM v13, available from the OpenFOAM Foundation; please note that the website is the .org version. Please note that a separately maintained branch of OpenFOAM is made available by OpenCFD LTD; please note that their website is the .com version. The download for OpenFOAM v13 can be found [here](https://cfd.direct/openfoam/download/). The guide for running OpenFOAM v13 can be found [here](https://doc.cfd.direct/openfoam/user-guide-v13/). To run OpenFOAM v13 on Windows requires the installation of WSL. Note that while OpenFOAM will work with multiple versions of Linux operating systems, OpenFOAM [specifically recommends](https://openfoam.org/download/windows/) that the Ubuntu 22.04 LTS to be used with OpenFOAM v13. 
+The OpenFOAM version used here is based on OpenFOAM version 13, available from the OpenFOAM Foundation; please note that the website is the .org version. Please note that the separately maintained branch of OpenFOAM is made available by OpenCFD LTD; please note that their website is the .com version. The download for OpenFOAM v13 can be found [here](https://cfd.direct/openfoam/download/). The guide for running OpenFOAM v13 can be found [here](https://doc.cfd.direct/openfoam/user-guide-v13/). The easiest way to run OpenFOAM v13 on Windows is via a Window Subsystem for Linux ([WSL](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux)). Note that while OpenFOAM will work with multiple versions of Linux operating systems, OpenFOAM [specifically recommends](https://openfoam.org/download/windows/) that the Ubuntu 22.04 LTS to be used with OpenFOAM v13. 
 
-There is an only Wiki, Forum and lots of youtube videos related to this topic for those interested in learning how to use OpenFoam.
+For those just coming to this page, there are Wiki's ([CFD-online wiki](https://www.cfd-online.com/Wiki/Main_Page), [Unofficial OpenFOAM wiki (the .org version)](https://openfoamwiki.net/index.php/Main_Page), [OpenFOAM Wiki (the .com version)](https://wiki.openfoam.com/Main_Page)), teh [CFD Online Forum](https://www.cfd-online.com/Forums/) and lots of youtube videos (especially by Jozsef Nagy) related to this topic for those interested in learning how to use OpenFoam.
 
-This project assumes contributors use **SSH** for GitHub authentification.
+This project assumes contributors use **SSH** for GitHub authentification, as we had difficulty using HTTPS over command-line interface for working with git.
 
 ## 📖 Overview
 This project uses OpenFOAM to analyze airflow and thermal behavior around window systems with solar blinds. The goal is to study how shading devices affect:
@@ -44,6 +44,8 @@ This project uses OpenFOAM to analyze airflow and thermal behavior around window
 - OpenFOAM (v13 recommended)
 - Linux / WSL2 (Ubuntu 22.04 LTS preferred)
 - ParaView (for visualization)
+- Conda (for pyFoamPlotWatcher.py)
+- gnuplot (for gnuplot's)
 
 ---
 # Installation and setup on Windows
@@ -79,7 +81,7 @@ Check installation with:
 git --version
 ```
 ## GitHub authentification: SSH only
-This repository should be used with SSH authentification only for Git operations.
+This repository should be used with SSH authentification only for Git operations. There was difficulty in using HTTPS .
 
 Do not use use HTTPS clone URLs for this project.
 1. Check whether an SSH key already exists:
@@ -137,8 +139,12 @@ Clone the repository using its SSH URL:
 ```
 # This code clones (copies) over the contents of the respository to the folder that you are currently in. Replace **USERNAME/REPOSITORY.git** with actual repository path.
 git clone git@github.com:USERNAME/REPOSITORY.git
+So for example
+git clone git@github.com:IanVG/openfoam-solar-blinds-analysis.git
 # This navigates to the folder you are in.
 cd REPOSITORY
+So for example:
+cd openfoam-solar-blinds-analysis
 ```
 
 5. Configure Git identity
@@ -146,6 +152,11 @@ Set your name and email so your commits are attributed correctly.
 ```
 git config --global user.name "Your name"
 git config --global user.email "your_email@example.com"
+
+So for example:
+git config --global user.name "Ian Van Giesen"
+git config --global user.email "ianvangiesen@gmail.com"
+
 ```
 Check that your Git identity is set correctly:
 ```

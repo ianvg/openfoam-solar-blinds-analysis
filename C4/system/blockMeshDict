@@ -44,9 +44,9 @@ zMin        -0.1;
 zMax         2.76;
 
 // Target cell sizes. Change these to refine/coarsen both blocks consistently.
-dx           0.1;
-dy           0.1;
-dz           0.1;
+dx           0.5; // Started at 0.1
+dy           0.5; // Started at 0.1
+dz           0.5; // Startted at 0.1
 
 outsideXCells #calc "round(($xInterface - $xOutsideMin)/$dx)";
 insideXCells  #calc "round(($xInsideMax - $xInterface)/$dx)";

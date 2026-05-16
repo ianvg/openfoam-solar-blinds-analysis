@@ -3,6 +3,10 @@
 #######################################################
 ### Cleaning the case
 #######################################################
+## Reminder
+## Before running anything in parallel, check how processors
+## your computer has via lscpu
+#######################################################
 
 foamCleanTutorials
 rm -r 0 > /dev/null 2>&1

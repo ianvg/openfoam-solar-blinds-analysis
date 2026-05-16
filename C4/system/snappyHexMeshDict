@@ -15,7 +15,7 @@ FoamFile
 
 castellatedMesh true; // Change for intermediary meshing
 snap            true; // Change for intermediary meshing
-addLayers       false; // Change for intermediary meshing
+addLayers       true; // Change for intermediary meshing
 
 geometry
 {
