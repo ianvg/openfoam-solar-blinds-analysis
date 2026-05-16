@@ -198,15 +198,20 @@ From a simulation that was run using the parallel option:
 paraFoam -builtin
 ```
 ## Contributing to the project
+For this project there are three important copies on git:
+a. GitHub branch:   origin's main
+b. Local cached copy:   origin/main
+c. Local branch:    main
 1. Move into the repository:
 ```
 cd ~/OpenFOAM/projects/REPOSITORY
 ```
-2. Before anything, check the status of your local copy:
+2. Before anything, update your local copy of origin/main, and compare the local cached copy to your local check the status of your local copy:
 ```
+git fetch
 git status
 ```
-2. Before making changes, update your local copy:
+3. Before making changes, update your local copy. git pull combines two function, git fetch and git merge.
 ```
 git pull
 ```
