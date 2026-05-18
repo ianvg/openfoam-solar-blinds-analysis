@@ -13,7 +13,7 @@ cp -r 0_org 0
 #Ensure that either the solver in serial or parallel is uncommented.
 
 #Running the solver in serial:
-#foamRun -solver incompressibleFluid | tee log.solver
+foamRun -solver incompressibleFluid | tee log.solver
 
 #Running the solver in parallel:
 
@@ -21,8 +21,8 @@ cp -r 0_org 0
 #Ensure that you have the minimum number of processors available for this job before running it!
 #Reminder that this number parameter needs to correspond with the decomposeParDict parameter
 
-decomposePar -force
-mpirun -np 8 foamRun -solver incompressibleFluid -parallel | tee log.solver
+#decomposePar -force
+#mpirun -np 8 foamRun -solver incompressibleFluid -parallel | tee log.solver
 #reconstructPar #To reconstruct the parallel case: 
 
 #######################################################

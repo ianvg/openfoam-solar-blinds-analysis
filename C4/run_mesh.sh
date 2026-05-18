@@ -31,4 +31,5 @@ createZones | tee log.createZones
 #Below to check mesh from mesh in constants/ folder
 checkMesh -constant | tee log.checkMesh
 
+# Check the mesh for the number of cell zones.
 checkMesh -constant -allTopology | grep "cell zones"

@@ -29,7 +29,8 @@ geometry
         {
             Mesh
             {
-                name interiorWalls;
+                name solidSurfaces;
+                //name interiorWalls; //rename to solidSurfaces
             }
         }
     }
@@ -198,7 +199,7 @@ addLayersControls
 
 	layers
 	{
-		interiorWalls
+		solidSurfaces
 		{
 			// Number of boundary layers to use for the layer addition.
             nSurfaceLayers 5; // Originally 3

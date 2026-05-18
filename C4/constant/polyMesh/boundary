@@ -7,62 +7,75 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
-    class       polyBoundaryMesh;
-    location    "constant/polyMesh";
-    object      boundary;
+    format          ascii;
+    class           polyBoundaryMesh;
+    location        "constant/polyMesh";
+    object          boundary;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-7
+
+7 // entry0
 (
-    outsideMinX
+    inlet
     {
         type            patch;
         nFaces          60;
-        startFace       30770;
+        startFace       32048;
     }
-    insideMaxX
+    outlet
     {
         type            patch;
-        nFaces          120;
-        startFace       30830;
+        nFaces          121;
+        startFace       32108;
     }
     minY
     {
-        type            wall;
-        inGroups        List<word> 1(wall);
+        type            cyclic;
         nFaces          198;
-        startFace       30950;
+        startFace       32229;
+        matchTolerance  0.0001;
+        neighbourPatch  maxY;
+        transformType   translational;
+        separation      ( 0 -5.065 0 );
     }
     maxY
     {
-        type            wall;
-        inGroups        List<word> 1(wall);
+        type            cyclic;
         nFaces          198;
-        startFace       31148;
+        startFace       32427;
+        matchTolerance  0.0001;
+        neighbourPatch  minY;
+        transformType   translational;
+        separation      ( 0 5.065 0 );
     }
     minZ
     {
-        type            wall;
-        inGroups        List<word> 1(wall);
-        nFaces          330;
-        startFace       31346;
+        type            cyclic;
+        nFaces          317;
+        startFace       32625;
+        matchTolerance  0.0001;
+        neighbourPatch  maxZ;
+        transformType   translational;
+        separation      ( 0 0 -2.86 );
     }
     maxZ
     {
-        type            wall;
-        inGroups        List<word> 1(wall);
-        nFaces          306;
-        startFace       31676;
+        type            cyclic;
+        nFaces          317;
+        startFace       32942;
+        matchTolerance  0.0001;
+        neighbourPatch  minZ;
+        transformType   translational;
+        separation      ( 0 0 2.86 );
     }
-    interiorWalls
+    solidSurfaces
     {
         type            wall;
-        inGroups        List<word> 1(wall);
-        nFaces          1901;
-        startFace       31982;
+        nFaces          1907;
+        startFace       33259;
     }
 )
+
 
 // ************************************************************************* //
