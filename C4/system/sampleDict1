@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      sampleDict1;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type            fieldValueDelta;
+libs            ("libfieldFunctionObjects.so");
+
+log             true;
+writeControl    timeStep;
+writeInterval   1;
+
+// Reports areaAverage(pPa on inlet) - areaAverage(pPa on outlet).
+// pPa must be generated first, e.g. with:
+// foamPostProcess -funcs '(pPa inletOutletPressureDrop)'
+operation       subtract;
+
+region1
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    writeFields     false;
+    patch           inlet;
+    operation       areaAverage;
+    fields          (pPa);
+}
+
+region2
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    writeFields     false;
+    patch           outlet;
+    operation       areaAverage;
+    fields          (pPa);
+}
+
+// ************************************************************************* //

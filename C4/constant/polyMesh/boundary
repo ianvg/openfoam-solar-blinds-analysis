@@ -20,20 +20,20 @@ FoamFile
     inlet
     {
         type            patch;
-        nFaces          60;
-        startFace       32048;
+        nFaces          220;
+        startFace       167619;
     }
     outlet
     {
         type            patch;
-        nFaces          121;
-        startFace       32108;
+        nFaces          114;
+        startFace       167839;
     }
     minY
     {
         type            cyclic;
-        nFaces          198;
-        startFace       32229;
+        nFaces          583;
+        startFace       167953;
         matchTolerance  0.0001;
         neighbourPatch  maxY;
         transformType   translational;
@@ -42,8 +42,8 @@ FoamFile
     maxY
     {
         type            cyclic;
-        nFaces          198;
-        startFace       32427;
+        nFaces          583;
+        startFace       168536;
         matchTolerance  0.0001;
         neighbourPatch  minY;
         transformType   translational;
@@ -52,8 +52,8 @@ FoamFile
     minZ
     {
         type            cyclic;
-        nFaces          317;
-        startFace       32625;
+        nFaces          1060;
+        startFace       169119;
         matchTolerance  0.0001;
         neighbourPatch  maxZ;
         transformType   translational;
@@ -62,8 +62,8 @@ FoamFile
     maxZ
     {
         type            cyclic;
-        nFaces          317;
-        startFace       32942;
+        nFaces          1060;
+        startFace       170179;
         matchTolerance  0.0001;
         neighbourPatch  minZ;
         transformType   translational;
@@ -72,8 +72,8 @@ FoamFile
     solidSurfaces
     {
         type            wall;
-        nFaces          1907;
-        startFace       33259;
+        nFaces          6485;
+        startFace       171239;
     }
 )
 
