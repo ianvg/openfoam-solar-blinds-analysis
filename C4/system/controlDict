@@ -56,6 +56,23 @@ functions
 
 #include "externalFunctionObject"
 
+windowOpeningFlowRate
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+
+	log             true;
+	writeControl    timeStep;
+	writeInterval   1;
+	writeFields	false;
+	
+	patch		inlet;
+	operation       areaNormalIntegrate;
+
+	fields          (U);
+}
+
+/*
 windowOpeningFlowRateCutPlane
 {
 	type            surfaceFieldValue;
@@ -107,6 +124,7 @@ windowOpeningFlowRate
 
 	fields          (U);
 }
+*/
 
 ///////////////////////////////////////////////////////////////////////////
 /*
