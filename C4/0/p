@@ -21,13 +21,16 @@ boundaryField
 {
     inlet
     {
-        type            zeroGradient;
+        type		fixedValue;
+        value		uniform 0;
+        //type            zeroGradient;
     }
 
     outlet
     {
-        type            fixedValue;
-        value           uniform 0;
+        type		zeroGradient;
+        //type            fixedValue;
+        //value           uniform 0;
     }
 
 //Ensure that the parameters below are in line with the blockMeshDict parameters.
