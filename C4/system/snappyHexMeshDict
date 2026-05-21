@@ -216,14 +216,14 @@ snapControls
 addLayersControls
 {
     relativeSizes true;
-    expansionRatio 1.2; // Originally 1.2. 1.8 really hurt. 1.2 worked well.
+    expansionRatio 1.15; // Originally 1.2. 1.8 really hurt. 1.2 worked well. 1.15 worked best. 1.10 worked well.
     // The final layer thickness of the boundary cell should be, e.g., 0.5 of the local undistorted
     // cell size in the background mesh.
     // Generally recommended as long as relative Sizes is true
-	finalLayerThickness 0.25; // Originally 0.5. 0.25 worked better. 0.125 worked well. 0.25 worked best.
+	finalLayerThickness 0.18; // Originally 0.5. 0.25 worked better. 0.125 worked well. 0.25 worked best. 0.12 worked great for dx 0.20 and 5 boundary layers
 	
 	// Originally 0.001, but that seemed excessive.
-	minThickness 0.01; // Originally 0.1, 0.01 worked well
+	minThickness 0.001; // Originally 0.1, 0.01 worked well 0.001 worked best.
 
 	layers
 	{
@@ -236,14 +236,14 @@ addLayersControls
 
     nGrow 0; // Originally 0. Antyhing above was not good.
     featureAngle 215; // Originally 130. Reducing below 130 removed layers! Having problems with sharp edges. 270 worked very well, increasing to 330 messed it all up! 215 worked a bit better than 270. 
-    maxFaceThicknessRatio 0.0625; // Originally 0.5, .125 worked very well
+    maxFaceThicknessRatio 0.8; // Originally 0.5, .125 worked very well, 0.0625 worked well
     nSmoothSurfaceNormals 1; // Originally 1.
-    nSmoothThickness 10; // Originally 10
+    nSmoothThickness 20; // Originally 10
     minMedialAxisAngle 90;
-    minMedianAxisAngle 90;
-    maxThicknessToMedialRatio 0.3; // Originally 0.3
-    nSmoothNormals 3;
-	nMedialAxisIter 10;
+    //minMedianAxisAngle 90;
+    maxThicknessToMedialRatio 0.8; // Originally 0.3
+    nSmoothNormals 5;
+	nMedialAxisIter 20;
 	slipFeatureAngle 30; // Originally 30
 	nRelaxIter 5; // Originally 5
 	nBufferCellsNoExtrude 0;

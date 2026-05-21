@@ -21,19 +21,19 @@ FoamFile
     {
         type            patch;
         nFaces          350;
-        startFace       644237;
+        startFace       660007;
     }
     outlet
     {
         type            patch;
-        nFaces          349;
-        startFace       644587;
+        nFaces          439;
+        startFace       660357;
     }
     minY
     {
         type            cyclic;
         nFaces          882;
-        startFace       644936;
+        startFace       660796;
         matchTolerance  0.0001;
         neighbourPatch  maxY;
         transformType   translational;
@@ -43,7 +43,7 @@ FoamFile
     {
         type            cyclic;
         nFaces          882;
-        startFace       645818;
+        startFace       661678;
         matchTolerance  0.0001;
         neighbourPatch  minY;
         transformType   translational;
@@ -53,7 +53,7 @@ FoamFile
     {
         type            cyclic;
         nFaces          1575;
-        startFace       646700;
+        startFace       662560;
         matchTolerance  0.0001;
         neighbourPatch  maxZ;
         transformType   translational;
@@ -63,7 +63,7 @@ FoamFile
     {
         type            cyclic;
         nFaces          1575;
-        startFace       648275;
+        startFace       664135;
         matchTolerance  0.0001;
         neighbourPatch  minZ;
         transformType   translational;
@@ -73,7 +73,7 @@ FoamFile
     {
         type            wall;
         nFaces          16201;
-        startFace       649850;
+        startFace       665710;
     }
 )
 
