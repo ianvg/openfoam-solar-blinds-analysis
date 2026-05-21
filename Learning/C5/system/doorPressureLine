@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+type            sets;
+libs            ("libsampling.so");
+
+writeControl    timeStep;
+writeInterval   1;
+
+setFormat       csv;
+interpolationScheme cellPoint;
+
+fields          (p pGaugePa pPa);
+
+sets
+{
+    doorPressureLine
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start       (0 2.4325 1.33);
+        end         (-0.5 2.4325 1.33);
+    }
+}
+
+// ************************************************************************* //

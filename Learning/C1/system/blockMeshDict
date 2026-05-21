@@ -1,0 +1,147 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  13                                    |
+|   \\  /    A nd           | Website:  https://openfoam.org                  |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+xmin -10; //inlet refer to COST 732 / Franke et al. best-practice guidance for urban CFD
+xmax  30; //outlet
+ymin -2.5;
+ymax  2.5;
+zmin -2.5;
+zmax  2.5;
+
+
+//xcells 20;
+//ycells 20;
+//zcells 20;
+
+lx #calc "$xmax - $xmin";
+dx 0.5;
+xcells #calc "abs(($lx)/($dx))";
+
+ly #calc "$ymax - $ymin";
+dy 0.5;
+ycells #calc "abs(($ly)/($dy))";
+
+lz #calc "$zmax - $zmin";
+//dz 20;	//BL OK at bottom - Better mesh at corners at the bottom
+dz 0.5;		//BL colapses at bottom - Mesh at the bottom corners is uglier
+zcells #calc "abs(($lz)/($dz))";
+
+
+// Background mesh for snappyHexMesh around constant/triSurface/Window_1.stl.
+// The STL bounds are approximately:
+//     min (0 -2.5 -2.5), max (0.1 2.5 2.5)
+//
+// Requested domain:
+//   - 20 m upstream of the window in the negative x direction
+//   - 30 m downstream of the window in the positive x direction
+//   - same width and height as the STL wall: 5 m by 5 m
+// As of 2026-05-09 the window begins at x=0 and is extruded in the positive x-axis direction. 
+
+vertices        
+(
+	($xmin  $ymin  $zmin)
+	($xmax  $ymin  $zmin)
+	($xmax  $ymax  $zmin)
+	($xmin  $ymax  $zmin)
+	($xmin  $ymin  $zmax)
+	($xmax  $ymin  $zmax)
+	($xmax  $ymax  $zmax)
+	($xmin  $ymax  $zmax)
+);
+
+blocks          
+(
+	hex (0 1 2 3 4 5 6 7) ($xcells $ycells $zcells) simpleGrading (1 1 1) // KEEP AT (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+
+	inlet
+	// minX originally
+	{
+		type patch;
+		faces
+		(
+			(0 3 7 4)
+		);
+	}
+
+	outlet
+	// xmax originally
+	{
+		type patch;
+		faces
+		(
+			(1 5 6 2)
+		);
+	}
+	// While the first simulation was successful, the later iteration may not have 
+        //symmetry, so the available options here for the "edge" of the virtual wind tunnel would be either slip
+       	//or freestream conditions. 
+	minY
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		(
+			(0 4 5 1)
+		);
+	}
+
+	maxY
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		(
+			(3 2 6 7)
+		);
+	}
+    
+	minZ
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		( 
+			(0 3 2 1)
+		);
+	}
+
+	maxZ
+	{
+		//type	patch;
+		type symmetryPlane;
+		faces
+		( 
+			(4 5 6 7)
+		);
+	}
+    
+);
+
+mergePatchPairs 
+(
+);
+
+// ************************************************************************* //

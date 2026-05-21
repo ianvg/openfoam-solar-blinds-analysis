@@ -3,6 +3,7 @@
 #set -euo pipefail #So we know if the first command out of two piped commands fails, this causes the script to fail adctually!
 
 #Copy over everything from 0_org/ folder to 0/
+# These two lines are necessary!
 rm -rf 0
 cp -r 0_org 0
 
@@ -23,7 +24,8 @@ cp -r 0_org 0
 
 decomposePar -force
 mpirun -np 8 foamRun -solver incompressibleFluid -parallel | tee log.solver
-#reconstructPar #To reconstruct the parallel case: 
+
+mpirun -np 8 foamPostProcess -solver incompressibleFluid -func yPlus -latestTime -noFunctionObjects -parallel | tee log.yPlus
 
 #######################################################
 ### Post-processing
@@ -35,5 +37,5 @@ mpirun -np 8 foamRun -solver incompressibleFluid -parallel | tee log.solver
 #foamPostProcess -solver incompressibleFluid -func yPlus -latestTime -noFunctionObjects | tee log.yPlus
 
 #Parallel post-processing
-mpirun -np 8 foamPostProcess -solver incompressibleFluid -func yPlus -latestTime -noFunctionObjects -parallel | tee log.yPlus
+
 reconstructPar #To reconstruct the parallel case: 

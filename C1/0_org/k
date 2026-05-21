@@ -17,8 +17,15 @@ FoamFile
 
 dimensions      [0 2 -2 0 0 0 0];
 
+// Originally 0.09375 for k
+// See https://www.cfd-online.com/Wiki/Turbulence_free-stream_boundary_conditions
+// for information on how to estimate these values
+
+kConstant	0.0216;
+
 //internalField   uniform 0.00015;
-internalField   uniform 0.09375;
+//internalField   uniform 0.09375;
+internalField   uniform $kConstant;
 
 boundaryField
 {
@@ -28,7 +35,7 @@ boundaryField
         //inletValue	uniform 0.09375;
         
         type		fixedValue;
-        value           uniform 0.09375;
+        value           uniform $kConstant;
     }
     outlet
     {
@@ -37,28 +44,36 @@ boundaryField
 //Ensure that the parameters below are in line with the parameters in the blockMeshDict
     minY
     {
-        //type		slip;
-        type            symmetryPlane;
+    	type		cyclic;
+	//type		kqRWallFunction;
+	//value		uniform 0.09375;
+	//type		symmetryPlane;
     }
     maxY
     {
-        //type		slip;
-        type            symmetryPlane;
+    	type		cyclic;
+	//type		kqRWallFunction;
+	//value		uniform 0.09375;
+	//type		symmetryPlane;
     }
     minZ
     {
-        //type		slip;
-        type            symmetryPlane;
+    	type		cyclic;
+	//type		kqRWallFunction;
+	//value		uniform 0.09375;
+	//type		symmetryPlane;
     }
     maxZ
     {
-        //type		slip;
-        type            symmetryPlane;
+    	type		cyclic;
+	//type		kqRWallFunction;
+	//value		uniform 0.09375;
+	//type		symmetryPlane;
     }
-    window_wall
+    solidSurfaces
     {
         type            kqRWallFunction;
-        value		uniform 0.09375;
+        value		uniform $kConstant;
     }
 }
 

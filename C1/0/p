@@ -21,42 +21,49 @@ boundaryField
 {
     inlet
     {
-        type            zeroGradient;
+        type		fixedValue;
+        value		uniform 0;
+        //type            zeroGradient;
     }
 
     outlet
     {
-        type            fixedValue;
-        value           uniform 0;
+        type		zeroGradient;
+        //type            fixedValue;
+        //value           uniform 0;
     }
 
 //Ensure that the parameters below are in line with the blockMeshDict parameters.
 // The 
     minY
     {
-        //type		slip;
-        type            symmetryPlane;
+	type		cyclic;
+	//type		zeroGradient;
+	//type		symmetryPlane;
     }
 
     maxY
     {
-        //type		slip;
-        type            symmetryPlane;
+	type		cyclic;
+	//type		zeroGradient;
+	//type		symmetryPlane;
     }
 
     minZ
     {
-        //type		slip;
-        type            symmetryPlane;
+	type		cyclic;
+	//type		zeroGradient;
+	//type		symmetryPlane;
     }
 
     maxZ
     {
-        //type		slip;
-        type            symmetryPlane;
+	type		cyclic;
+	//type		zeroGradient;
+	//type		symmetryPlane;
     }
 
-    window_wall // Need to fix this is not right. Should be zeroGradient
+    solidSurfaces // Need to fix this is not right. Should be zeroGradient
     {
 	//type		noSlip;
 	type		zeroGradient;

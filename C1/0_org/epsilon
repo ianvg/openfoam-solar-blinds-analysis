@@ -17,52 +17,64 @@ FoamFile
 
   dimensions      [0 2 -3 0 0 0 0];
 
-  internalField   uniform 0.0135;
+// Originally the epsilon constant value was 0.0135.
 
-  boundaryField
+epsilonConstant		0.01043;
+
+internalField   uniform $epsilonConstant;
+
+boundaryField
+{
+  inlet
   {
-      inlet
-      {
-          type            fixedValue;
-          value           uniform 0.0135;
-      }
-
-      outlet
-      {
-          type            zeroGradient;
-      }
-
-//Ensure that the parameters below are in line with the blockMeshDict parameters.
-      minY
-      {
-        //type		slip;
-        type            symmetryPlane;
-      }
-
-      maxY
-      {
-        //type		slip;
-        type            symmetryPlane;
-      }
-
-      minZ
-      {
-        //type		slip;
-        type            symmetryPlane;
-      }
-
-      maxZ
-      {
-        //type		slip;
-        type            symmetryPlane;
-      }
-
-      window_wall
-      {
-          type            epsilonWallFunction;
-          value           uniform 0.0135;
-      }
+      type            fixedValue;
+      value           uniform $epsilonConstant;
   }
 
-  // ************************************************************************* //
+  outlet
+  {
+      type            zeroGradient;
+  }
+
+//Ensure that the parameters below are in line with the blockMeshDict parameters.
+minY
+{
+	type		cyclic;
+	//type            epsilonWallFunction;
+	//value           uniform 0.0135;
+	//type            symmetryPlane;
+}
+
+  maxY
+  {
+	type		cyclic;
+	//type            epsilonWallFunction;
+	//value           uniform 0.0135;
+	//type            symmetryPlane;
+  }
+
+  minZ
+  {
+	type		cyclic;
+	//type            epsilonWallFunction;
+	//value           uniform 0.0135;
+	//type            symmetryPlane;
+  }
+
+  maxZ
+  {
+	type		cyclic;
+	//type            epsilonWallFunction;
+	//value           uniform 0.0135;
+	//type            symmetryPlane;
+  }
+
+  solidSurfaces
+  {
+      type            epsilonWallFunction;
+      value           uniform $epsilonConstant;
+  }
+}
+
+// ************************************************************************* //
 

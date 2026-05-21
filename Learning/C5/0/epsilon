@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |				
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9                                   	
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location	"0";
+    object      epsilon;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+  dimensions      [0 2 -3 0 0 0 0];
+
+// Originally the epsilon constant value was 0.0135.
+
+epsilonConstant		0.01043;
+
+internalField   uniform $epsilonConstant;
+
+boundaryField
+{
+  inlet
+  {
+      type            fixedValue;
+      value           uniform $epsilonConstant;
+  }
+
+  outlet
+  {
+      type            zeroGradient;
+  }
+
+//Ensure that the parameters below are in line with the blockMeshDict parameters.
+minY
+{
+	type		symmetryPlane;
+	//type            epsilonWallFunction;
+	//value           uniform 0.0135;
+	//type            symmetryPlane;
+}
+
+  maxY
+  {
+	type		symmetryPlane;
+	//type            epsilonWallFunction;
+	//value           uniform 0.0135;
+	//type            symmetryPlane;
+  }
+
+  minZ
+  {
+	type		symmetryPlane;
+	//type            epsilonWallFunction;
+	//value           uniform 0.0135;
+	//type            symmetryPlane;
+  }
+
+  maxZ
+  {
+	type		symmetryPlane;
+	//type            epsilonWallFunction;
+	//value           uniform 0.0135;
+	//type            symmetryPlane;
+  }
+
+  solidSurfaces
+  {
+      type            epsilonWallFunction;
+      value           uniform $epsilonConstant;
+  }
+}
+
+// ************************************************************************* //
