@@ -1,7 +1,9 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-cases=(C1 C2 C3 C4 C5 C6 C7 C8 C9)
+#cases=(C1 C2 C3 C4 C5 C6 C7 C8 C9)
+cases=(C5)
+#cases=(C{1..24}) #Use this to run through all the 24 cases.
 
 baseDir=$(pwd)
 
@@ -17,7 +19,7 @@ for case in "${cases[@]}"; do
         exit 1
     fi
 
-    sh run_all.sh 2>&1 | tee log.masterRun
+    bash run_all.sh 2>&1 | tee log.masterRun
 
     cd "$baseDir"
 

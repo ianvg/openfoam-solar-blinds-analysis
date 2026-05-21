@@ -1,0 +1,73 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |				
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13                                   	
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet
+    {
+        type		fixedValue;
+        value		uniform 0;
+        //type            zeroGradient;
+    }
+
+    outlet
+    {
+        type		zeroGradient;
+        //type            fixedValue;
+        //value           uniform 0;
+    }
+
+//Ensure that the parameters below are in line with the blockMeshDict parameters.
+// The 
+    minY
+    {
+	type		cyclic;
+	//type		zeroGradient;
+	//type		symmetryPlane;
+    }
+
+    maxY
+    {
+	type		cyclic;
+	//type		zeroGradient;
+	//type		symmetryPlane;
+    }
+
+    minZ
+    {
+	type		cyclic;
+	//type		zeroGradient;
+	//type		symmetryPlane;
+    }
+
+    maxZ
+    {
+	type		cyclic;
+	//type		zeroGradient;
+	//type		symmetryPlane;
+    }
+
+    solidSurfaces // Need to fix this is not right. Should be zeroGradient
+    {
+	//type		noSlip;
+	type		zeroGradient;
+    }
+}
+
+// ************************************************************************* //

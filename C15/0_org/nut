@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |				
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9                                   	
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location	"0";
+    object      nut;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//nut is ratio between omega and k
+
+dimensions      [0 2 -1 0 0 0 0];
+
+internalField   uniform 1e-5;
+
+boundaryField
+{
+    inlet
+    {
+        type            calculated;
+        value           uniform 1e-5;
+    }
+    outlet
+    {
+        type            calculated;
+        value		uniform 1e-5;
+    }
+    
+ //Ensure that the parameters below are in line with the blockMeshDict parameters
+    minY
+    {
+	type		cyclic;
+	//type		nutkWallFunction;
+	//value		uniform 0;
+	//type		symmetryPlane;
+    }
+    maxY
+    {
+	type		cyclic;
+	//type		nutkWallFunction;
+	//value		uniform 0;
+	//type		symmetryPlane;
+    }
+    minZ
+    {
+	type		cyclic;
+	//type		nutkWallFunction;
+	//value		uniform 0;
+	//type		symmetryPlane;
+    }
+    maxZ
+    {
+	type		cyclic;
+	//type		nutkWallFunction;
+	//value		uniform 0;
+	//type		symmetryPlane;
+    }
+    solidSurfaces
+    {
+        type            nutkWallFunction;
+        value		uniform 0;
+    }
+}
+
+// ************************************************************************* //

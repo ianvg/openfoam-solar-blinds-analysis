@@ -1,0 +1,156 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      sampleDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// This sample dictionary computes the average pressure around the window 
+// in four orthogonal lines on the inside face and on the outside face.
+
+type            sets;
+libs            ("libsampling.so");
+
+log		true;
+writeControl    timeStep;
+writeInterval   1;
+
+setFormat       csv;
+interpolationScheme cellPoint;
+
+fields          (p pGaugePa pPa);
+
+sets
+{
+/////////////////////////////////////////////////////
+// Indoor pressure lines
+///////////////////////////////////////////////////// 
+// Indoor pressure line #1, top-side of window
+// Note, I had to change the point sampling from the 0.1 X-axis plane
+// to the 0.15 x-axis plane, because of some weird geometry.
+    doorPressureLine_01
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start		(0.15 1.814 1.990);
+        end		(0.15 1.814 2.490);
+    }
+// Indoor pressure line #2, right-side of window
+    doorPressureLine_02
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start       (0.15 2.380 1.490);
+        end         (0.15 2.880 1.490);
+    }
+// Indoor pressure line #3, bottom-side of window
+    doorPressureLine_03
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start       (0.15 1.810 0.990);
+        end         (0.15 1.810 0.490);
+    }
+// Indoor pressure line #4, left-side of window
+    doorPressureLine_04
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start       (0.15 1.240 1.490);
+        end         (0.15 0.740 1.490);
+    }
+/////////////////////////////////////////////////////
+// Outdoor pressure lines
+///////////////////////////////////////////////////// 
+// Outdoor pressure line #1, top-side of window
+    doorPressureLine_05
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start       (0 1.810 1.990);
+        end         (0 1.810 2.490);
+    }
+// Outdoor pressure line #2, right-side of window
+    doorPressureLine_06
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start       (0 1.240 1.490);
+        end         (0 0.740 1.490);
+    }
+// Outdoor pressure line #3, bottom-side of window
+    doorPressureLine_07
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start       (0 1.810 0.990);
+        end         (0 1.810 0.490);
+    }
+// Outdoor pressure line #4, left-side of window
+    doorPressureLine_08
+    {
+        type        lineUniform;
+        axis        distance;
+
+        // 11 points gives 0.05 m spacing over 0.50 m, including both ends.
+        nPoints     11;
+
+        // Assumption: door/window plane is near x = 0 and "outwards" is -x.
+        // Replace this point with the middle point of the door edge.
+        start       (0 2.380 1.490);
+        end         (0 2.880 1.490);
+    }
+
+}
+
+// ************************************************************************* //

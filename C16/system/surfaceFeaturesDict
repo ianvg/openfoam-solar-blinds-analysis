@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |                                                 
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           
+   \\    /   O peration     | Website:  https://openfoam.org                                       
+    \\  /    A nd           | Version:  13                  
+     \\/     M anipulation  |                                                 
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeaturesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+interiorSurfacesWindowOnly
+{
+	surfaces ("interiorSurfacesWindowOnly.stl");
+
+	includedAngle 150;
+	
+	subsetFeatures
+	{
+		insideBox        (-1 0.79 0.54) (2 2.83 2.26);
+
+		nonManifoldEdges no;
+		openEdges        yes;
+	}
+
+	writeObj	yes;
+}
+
+interiorSurfacesAll
+{
+	surfaces ("interiorSurfaces_90deg_25pct.stl");
+
+	includedAngle 150;
+
+	subsetFeatures
+	{
+	    nonManifoldEdges no;
+	    openEdges        yes;
+	}
+
+
+	writeObj yes;
+}
+
+/*
+surfaces ("Window_1.stl");
+
+// Feature edges are extracted where adjacent triangle normals differ enough.
+// This follows the reference case style, but targets the local STL.
+// Mark edges whose adjacent surface normals are at an angle less
+// than includedAngle as features
+// - 0  : selects no edges
+// - 180: selects all edges
+includedAngle 150;
+
+subsetFeatures
+{
+// Keep nonManifold edges (edges with >2 connected faces)
+    nonManifoldEdges no;
+    
+// Keep open edges (edges with 1 connected face)
+    openEdges        yes;
+}
+
+// Write features to obj format for postprocessing and viewing
+writeObj yes;
+*/
+// ************************************************************************* //
