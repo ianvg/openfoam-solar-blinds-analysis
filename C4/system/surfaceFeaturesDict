@@ -13,6 +13,40 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+interiorSurfacesWindowOnly
+{
+	surfaces ("interiorSurfacesWindowOnly.stl");
+
+	includedAngle 150;
+	
+	subsetFeatures
+	{
+		insideBox        (-1 0.79 0.54) (2 2.83 2.26);
+
+		nonManifoldEdges no;
+		openEdges        yes;
+	}
+
+	writeObj	yes;
+}
+
+interiorSurfacesAll
+{
+	surfaces ("interiorSurfaces.stl");
+
+	includedAngle 150;
+
+	subsetFeatures
+	{
+	    nonManifoldEdges no;
+	    openEdges        yes;
+	}
+
+
+	writeObj yes;
+}
+
+/*
 surfaces ("Window_1.stl");
 
 // Feature edges are extracted where adjacent triangle normals differ enough.
@@ -34,5 +68,5 @@ subsetFeatures
 
 // Write features to obj format for postprocessing and viewing
 writeObj yes;
-
+*/
 // ************************************************************************* //

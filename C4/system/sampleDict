@@ -13,6 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// This sample dictionary computes the average pressure around the window 
+// in four orthogonal lines on the inside face and on the outside face.
+
 type            sets;
 libs            ("libsampling.so");
 

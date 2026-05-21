@@ -9,43 +9,43 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      sampleDict1;
+    object      sampleDict2;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// This sample dictionary computes the area average differential pressure
-// between in the inlet patch and the outlet patch.
+// Computes the volume average differential pressure between the outdoor and
+// indoor cellZones using pGaugePa.
 
 type            fieldValueDelta;
 libs            ("libfieldFunctionObjects.so");
 
 log             true;
-writeControl    timeStep;
-writeInterval   1;
+writeControl    writeTime;
 
-// Reports areaAverage(pPa on inlet) - areaAverage(pPa on outlet).
-// pPa must be generated first, e.g. with:
-// foamPostProcess -funcs '(pPa inletOutletPressureDrop)'
+// Reports volAverage(pGaugePa in domainOutside)
+//       - volAverage(pGaugePa in domainInside).
 operation       subtract;
 
 region1
 {
-    type            surfaceFieldValue;
+    type            volFieldValue;
     libs            ("libfieldFunctionObjects.so");
+
     writeFields     false;
-    patch           inlet;
-    operation       areaAverage;
-    fields          (pPa);
+    cellZone        domainOutside;
+    operation       volAverage;
+    fields          (pGaugePa);
 }
 
 region2
 {
-    type            surfaceFieldValue;
+    type            volFieldValue;
     libs            ("libfieldFunctionObjects.so");
+
     writeFields     false;
-    patch           outlet;
-    operation       areaAverage;
-    fields          (pPa);
+    cellZone        domainInside;
+    operation       volAverage;
+    fields          (pGaugePa);
 }
 
 // ************************************************************************* //

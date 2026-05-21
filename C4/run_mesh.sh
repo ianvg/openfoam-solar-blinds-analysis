@@ -19,11 +19,16 @@ rm -rf constant/polyMesh processor*
 blockMesh -dict system/blockMeshDict | tee log.blockMesh
 #Surface features below intended to extract edges for later selection for
 #mesh refinement.
-#surfaceFeatures | tee log.surfaceFeatures #Need to fix (2026-05-15)
+#First copy the .stl so we can extract only the edges related to the window
+cp constant/triSurface/interiorSurfaces.stl constant/triSurface/interiorSurfacesWindowOnly.stl
+
+surfaceFeatures | tee log.surfaceFeatures #Fixed!
 
 #For running snappyHexMesh for use in the simulation (once you are happy with mesh):
 # To write the final snappyHexMesh result directly into constant/polyMesh instead:
 snappyHexMesh -overwrite -dict system/snappyHexMeshDict | tee log.snappyHexMesh
+
+#snappyHexMesh -noOverwrite -dict system/snappyHexMeshDict | tee log.snappyHexMesh
 
 #Create a zone called all:
 createZones | tee log.createZones

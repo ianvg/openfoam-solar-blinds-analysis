@@ -1,0 +1,130 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functionObject;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type            coded;
+libs            ("libutilityFunctionObjects.so");
+
+field           pGaugePa;
+insideCellZone  domainInside;
+outsideCellZone domainOutside;
+
+codeInclude
+#{
+    #include "volFields.H"
+    #include "cellZone.H"
+    #include "OFstream.H"
+    #include "OSspecific.H"
+    #include "PstreamReduceOps.H"
+#};
+
+codeOptions
+#{
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+#};
+
+codeLibs
+#{
+    -lfiniteVolume
+#};
+
+codeFields
+#{
+    fields.append("pGaugePa");
+#};
+
+codeWrite
+#{
+    const word fieldName("pGaugePa");
+    const word insideZoneName("domainInside");
+    const word outsideZoneName("domainOutside");
+
+    const volScalarField& p = mesh().lookupObject<volScalarField>(fieldName);
+    const scalarField& V = mesh().V();
+
+    const labelList& insideCells = mesh().cellZones()[insideZoneName];
+    const labelList& outsideCells = mesh().cellZones()[outsideZoneName];
+
+    scalar insidePV = 0;
+    scalar insideV = 0;
+    forAll(insideCells, i)
+    {
+        const label celli = insideCells[i];
+        insidePV += p[celli]*V[celli];
+        insideV += V[celli];
+    }
+
+    scalar outsidePV = 0;
+    scalar outsideV = 0;
+    forAll(outsideCells, i)
+    {
+        const label celli = outsideCells[i];
+        outsidePV += p[celli]*V[celli];
+        outsideV += V[celli];
+    }
+
+    reduce(insidePV, sumOp<scalar>());
+    reduce(insideV, sumOp<scalar>());
+    reduce(outsidePV, sumOp<scalar>());
+    reduce(outsideV, sumOp<scalar>());
+
+    if (insideV <= SMALL)
+    {
+        FatalErrorInFunction
+            << "Cell zone " << insideZoneName << " has zero volume"
+            << exit(FatalError);
+    }
+
+    if (outsideV <= SMALL)
+    {
+        FatalErrorInFunction
+            << "Cell zone " << outsideZoneName << " has zero volume"
+            << exit(FatalError);
+    }
+
+    const scalar insideAverage = insidePV/insideV;
+    const scalar outsideAverage = outsidePV/outsideV;
+    const scalar difference = outsideAverage - insideAverage;
+
+    Info<< nl
+        << "insideOutsidePressureAvgDiff write:" << nl
+        << "    volAverage(" << insideZoneName << ") of " << fieldName
+        << " = " << insideAverage << nl
+        << "    volAverage(" << outsideZoneName << ") of " << fieldName
+        << " = " << outsideAverage << nl
+        << "    difference outside - inside = " << difference << " Pa"
+        << nl << endl;
+
+    fileName dir
+    (
+        mesh().time().globalPath()
+       /"postProcessing"
+       /name()
+       /mesh().time().name()
+    );
+
+    mkDir(dir);
+
+    OFstream file(dir/"pressureDiff.dat");
+    file<< "# Time" << tab
+        << "insideAverage" << tab
+        << "outsideAverage" << tab
+        << "outsideMinusInside" << endl;
+    file<< mesh().time().userTimeValue() << tab
+        << insideAverage << tab
+        << outsideAverage << tab
+        << difference << endl;
+#};
+
+// ************************************************************************* //
