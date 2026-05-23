@@ -283,9 +283,11 @@ def set_outlet_velocity(path: Path, magnitude: str, dry_run: bool) -> None:
 
 
 def update_velocity_fields(case_dir: Path, config: CaseConfig, dry_run: bool) -> None:
-    if dry_run and not case_dir.exists():
+    velocity_vector = f"({config.velocity_value} 0 0)"
+
+    if dry_run:
         print(
-            f"Would set outlet velocity magnitude={config.velocity_value} "
+            f"Would set velocityConstant={velocity_vector} "
             f"in all copied U files under {case_dir}"
         )
         return
@@ -295,7 +297,7 @@ def update_velocity_fields(case_dir: Path, config: CaseConfig, dry_run: bool) ->
         raise FileNotFoundError(f"No U files found under {case_dir}")
 
     for path in velocity_files:
-        set_outlet_velocity(path, config.velocity_value, dry_run)
+        set_openfoam_constant(path, "velocityConstant", velocity_vector, dry_run)
 
 
 def update_turbulence_fields(case_dir: Path, config: CaseConfig, dry_run: bool) -> None:
