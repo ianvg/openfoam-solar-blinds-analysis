@@ -27,3 +27,6 @@ python3 tools/write_pressure_cd_summary.py
 # Or choose to target pPa instead:
 # python3 tools/average_pGauge_lines.py --column pPa
 
+
+#Now delete the processor folder, unless we need to restart from decomposed results.
+rm -rf processor*

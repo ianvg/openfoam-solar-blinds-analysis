@@ -29,11 +29,18 @@ deltaT          0.5; //1 is a little coarse, so changing it to 0.05
 writeControl    timeStep;
 writeInterval   1;
 
-purgeWrite      0;
+// In general for the presentation, we only need the last time directory.
+//purgeWrite	0; // Keeps all the time directories.
+purgeWrite      2; // Only keep the latest 2 written time directories.
 
-writeFormat     ascii;
+//writeFormat     ascii;
+writeFormat	binary; // Help to reduce solver space.
 writePrecision  6;
+
+// Don't use writeCompression if the writeFormat is binary! It's unnecessary
+// and inefficient.
 writeCompression off;
+//writeCompression on; // Help to reduce solver disk space for ASCII mode. 
 
 timeFormat      general;
 timePrecision   6;

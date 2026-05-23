@@ -19,7 +19,7 @@ FoamFile
 
 // Originally the epsilon constant value was 0.0135.
 
-epsilonConstant		1.82E-02;
+epsilonConstant		0.0182;
 
 internalField   uniform $epsilonConstant;
 

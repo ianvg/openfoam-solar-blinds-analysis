@@ -4,6 +4,9 @@
 0.* 
 *.OpenFOAM
 
+# Generated case directories; keep caseTemplate tracked.
+/C[0-9]*/
+
 # Mesh and processor outputs
 processor*
 dynamicCode/

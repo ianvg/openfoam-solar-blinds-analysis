@@ -34,6 +34,8 @@ sets
 // Indoor pressure lines
 ///////////////////////////////////////////////////// 
 // Indoor pressure line #1, top-side of window
+// Note, I had to change the point sampling from the 0.1 X-axis plane
+// to the 0.15 x-axis plane, because of some weird geometry.
     doorPressureLine_01
     {
         type        lineUniform;
@@ -44,8 +46,8 @@ sets
 
         // Assumption: door/window plane is near x = 0 and "outwards" is -x.
         // Replace this point with the middle point of the door edge.
-        start		(0.1 1.814 1.990);
-        end		(0.1 1.814 2.490);
+        start		(0.15 1.814 1.990);
+        end		(0.15 1.814 2.490);
     }
 // Indoor pressure line #2, right-side of window
     doorPressureLine_02
@@ -58,8 +60,8 @@ sets
 
         // Assumption: door/window plane is near x = 0 and "outwards" is -x.
         // Replace this point with the middle point of the door edge.
-        start       (0.1 2.380 1.490);
-        end         (0.1 2.880 1.490);
+        start       (0.15 2.380 1.490);
+        end         (0.15 2.880 1.490);
     }
 // Indoor pressure line #3, bottom-side of window
     doorPressureLine_03
@@ -72,8 +74,8 @@ sets
 
         // Assumption: door/window plane is near x = 0 and "outwards" is -x.
         // Replace this point with the middle point of the door edge.
-        start       (0.1 1.810 0.990);
-        end         (0.1 1.810 0.490);
+        start       (0.15 1.810 0.990);
+        end         (0.15 1.810 0.490);
     }
 // Indoor pressure line #4, left-side of window
     doorPressureLine_04
@@ -86,8 +88,8 @@ sets
 
         // Assumption: door/window plane is near x = 0 and "outwards" is -x.
         // Replace this point with the middle point of the door edge.
-        start       (0.1 1.240 1.490);
-        end         (0.1 0.740 1.490);
+        start       (0.15 1.240 1.490);
+        end         (0.15 0.740 1.490);
     }
 /////////////////////////////////////////////////////
 // Outdoor pressure lines

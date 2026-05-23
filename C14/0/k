@@ -21,7 +21,7 @@ dimensions      [0 2 -2 0 0 0 0];
 // See https://www.cfd-online.com/Wiki/Turbulence_free-stream_boundary_conditions
 // for information on how to estimate these values
 
-kConstant	3.82E-02;
+kConstant	0.0382;
 
 //internalField   uniform 0.00015;
 //internalField   uniform 0.09375;

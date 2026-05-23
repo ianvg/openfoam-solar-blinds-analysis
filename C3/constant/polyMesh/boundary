@@ -7,7 +7,7 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format          ascii;
+    format          binary;
     class           polyBoundaryMesh;
     location        "constant/polyMesh";
     object          boundary;
@@ -21,19 +21,19 @@ FoamFile
     {
         type            patch;
         nFaces          350;
-        startFace       671010;
+        startFace       673377;
     }
     outlet
     {
         type            patch;
         nFaces          180;
-        startFace       671360;
+        startFace       673727;
     }
     minY
     {
         type            cyclic;
         nFaces          882;
-        startFace       671540;
+        startFace       673907;
         matchTolerance  0.0001;
         neighbourPatch  maxY;
         transformType   translational;
@@ -43,7 +43,7 @@ FoamFile
     {
         type            cyclic;
         nFaces          882;
-        startFace       672422;
+        startFace       674789;
         matchTolerance  0.0001;
         neighbourPatch  minY;
         transformType   translational;
@@ -53,7 +53,7 @@ FoamFile
     {
         type            cyclic;
         nFaces          1575;
-        startFace       673304;
+        startFace       675671;
         matchTolerance  0.0001;
         neighbourPatch  maxZ;
         transformType   translational;
@@ -63,7 +63,7 @@ FoamFile
     {
         type            cyclic;
         nFaces          1575;
-        startFace       674879;
+        startFace       677246;
         matchTolerance  0.0001;
         neighbourPatch  minZ;
         transformType   translational;
@@ -72,8 +72,8 @@ FoamFile
     solidSurfaces
     {
         type            wall;
-        nFaces          16894;
-        startFace       676454;
+        nFaces          17136;
+        startFace       678821;
     }
 )
 

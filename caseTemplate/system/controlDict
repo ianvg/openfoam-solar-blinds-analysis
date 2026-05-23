@@ -30,8 +30,8 @@ writeControl    timeStep;
 writeInterval   1;
 
 // In general for the presentation, we only need the last time directory.
-purgeWrite	0; // Keeps all the time directories.
-//purgeWrite      2; // Only keep the latest 2 written time directories.
+//purgeWrite	0; // Keeps all the time directories.
+purgeWrite      2; // Only keep the latest 2 written time directories.
 
 //writeFormat     ascii;
 writeFormat	binary; // Help to reduce solver space.
@@ -117,7 +117,9 @@ windowOpeningFlowRate
 	writeInterval   1;
 	writeFields	false;
 	
-	patch		inlet;
+	// Using the inlet patch for calculating flow rate did not work well.
+	// Going to use outlet patch if simulating fan flow through the door opening.
+	patch		outlet;
 	operation       areaNormalIntegrate;
 
 	fields          (U);

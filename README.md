@@ -296,8 +296,22 @@ git commit -m "Commit description"
 git push
 ```
 
+## Setting up the cases for different scenarios
+./create_cfd_cases.py --help
+./create_cfd_cases.py --first-case 25
 
-## 🚀 Running a Case
+./create_cfd_cases.py --overwrite
+
+./create_cfd_cases.py --skip-existing
+
+## Running all cases or a group of cases:
+./run_allCases.sh --first-case 25
+./run_allCases.sh --first-case 25 --last-case 30
+./run_allCases.sh --case 25 --case 30
+./run_allCases.sh --first-case 25 --skip-existing
+./run_allCases.sh --dry-run --first-case 25 --last-case 30
+
+## Running one case at a time:
 
 Example:
 
@@ -315,3 +329,13 @@ simpleFoam
 git add .
 git commit -m "Commit description"
 git push
+```
+## Collecting and summarizing case results in one .csv
+
+./collect_postprocessing_csv.py --help
+./collect_postprocessing_csv.py --first-case 25
+./collect_postprocessing_csv.py --first-case 25 --last-case 30
+./collect_postprocessing_csv.py --case 25 --case 30
+./collect_postprocessing_csv.py --case 1 --case 4 --output selected.csv
+
+

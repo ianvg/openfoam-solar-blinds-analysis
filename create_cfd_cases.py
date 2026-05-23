@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create OpenFOAM cases C1-C24 from caseTemplate using CSV data and STLs.
+"""Create OpenFOAM cases from caseTemplate using CSV data and STLs.
 
 Run this script from anywhere. It resolves all project paths relative to the
 folder containing this file.
@@ -9,15 +9,12 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gzip
 import math
 import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-
-
-FIRST_CASE = 1
-LAST_CASE = 24
 
 
 @dataclass(frozen=True)
@@ -40,12 +37,17 @@ class CaseConfig:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Copy caseTemplate to C1-C24 and customize each case from CSV/STL data."
+        description="Copy caseTemplate to case folders and customize each case from CSV/STL data."
     )
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Delete existing C1-C24 folders before recreating them.",
+        help="Delete existing target case folders before recreating them.",
+    )
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="Skip case folders that already exist instead of raising an error.",
     )
     parser.add_argument(
         "--dry-run",
@@ -55,9 +57,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--case",
         type=int,
-        choices=range(FIRST_CASE, LAST_CASE + 1),
-        metavar=f"{FIRST_CASE}-{LAST_CASE}",
-        help="Create only one case number instead of all C1-C24.",
+        action="append",
+        help=(
+            "Create only this case number. Can be used more than once. "
+            "By default, all cases listed in the CSV are created."
+        ),
+    )
+    parser.add_argument(
+        "--first-case",
+        type=int,
+        help="Create only CSV cases with this number or higher.",
+    )
+    parser.add_argument(
+        "--last-case",
+        type=int,
+        help="Create only CSV cases with this number or lower.",
     )
     parser.add_argument(
         "--source-case",
@@ -90,9 +104,41 @@ def numeric_text(value: str) -> str:
     return match.group(0)
 
 
+def format_number(value: float) -> str:
+    if math.isclose(value, round(value), rel_tol=0, abs_tol=1e-9):
+        return str(int(round(value)))
+    return f"{value:.12g}"
+
+
+def shade_percent_text(value: str) -> str:
+    """Convert CSV shade openings to the percentage text used in STL names."""
+    shade = float(numeric_text(value))
+    if 0 <= shade <= 1:
+        shade *= 100
+    return format_number(shade)
+
+
+def read_csv_rows(csv_path: Path) -> list[list[str]]:
+    with csv_path.open("rb") as raw_handle:
+        is_gzip = raw_handle.read(2) == b"\x1f\x8b"
+
+    opener = gzip.open if is_gzip else open
+    encodings = ("utf-8-sig", "cp1252", "latin-1")
+    last_error: UnicodeDecodeError | None = None
+    for encoding in encodings:
+        try:
+            with opener(csv_path, mode="rt", newline="", encoding=encoding) as handle:
+                return list(csv.reader(handle))
+        except UnicodeDecodeError as exc:
+            last_error = exc
+
+    if last_error is not None:
+        raise last_error
+    raise ValueError(f"Could not read CSV rows from {csv_path}")
+
+
 def load_case_configs(csv_path: Path) -> dict[int, CaseConfig]:
-    with csv_path.open(newline="", encoding="utf-8-sig") as handle:
-        rows = list(csv.reader(handle))
+    rows = read_csv_rows(csv_path)
 
     if not rows:
         raise ValueError(f"{csv_path} is empty")
@@ -125,23 +171,40 @@ def load_case_configs(csv_path: Path) -> dict[int, CaseConfig]:
             continue
 
         case_number = int(case_match.group(1))
-        if FIRST_CASE <= case_number <= LAST_CASE:
-            configs[case_number] = CaseConfig(
-                case_number=case_number,
-                angle_deg=numeric_text(row[angle_idx]),
-                shade_pct=numeric_text(row[shade_idx]),
-                velocity_value=numeric_text(row[velocity_idx]),
-                k_value=numeric_text(row[k_idx]),
-                epsilon_value=numeric_text(row[epsilon_idx]),
-            )
+        configs[case_number] = CaseConfig(
+            case_number=case_number,
+            angle_deg=numeric_text(row[angle_idx]),
+            shade_pct=shade_percent_text(row[shade_idx]),
+            velocity_value=numeric_text(row[velocity_idx]),
+            k_value=numeric_text(row[k_idx]),
+            epsilon_value=numeric_text(row[epsilon_idx]),
+        )
 
-    expected = set(range(FIRST_CASE, LAST_CASE + 1))
-    missing_cases = sorted(expected.difference(configs))
-    if missing_cases:
-        missing_names = ", ".join(f"Case {number}" for number in missing_cases)
-        raise ValueError(f"{csv_path} is missing expected rows: {missing_names}")
+    if not configs:
+        raise ValueError(f"{csv_path} does not contain any rows named like 'Case 1'")
 
     return configs
+
+
+def selected_case_numbers(args: argparse.Namespace, configs: dict[int, CaseConfig]) -> list[int]:
+    if args.case:
+        missing = sorted(set(args.case).difference(configs))
+        if missing:
+            missing_names = ", ".join(f"Case {number}" for number in missing)
+            raise ValueError(f"Requested case(s) not found in CSV: {missing_names}")
+        case_numbers = sorted(set(args.case))
+    else:
+        case_numbers = sorted(configs)
+
+    if args.first_case is not None:
+        case_numbers = [number for number in case_numbers if number >= args.first_case]
+    if args.last_case is not None:
+        case_numbers = [number for number in case_numbers if number <= args.last_case]
+
+    if not case_numbers:
+        raise ValueError("No CSV cases matched the requested selection")
+
+    return case_numbers
 
 
 def copy_case(source: Path, target: Path, overwrite: bool, dry_run: bool) -> None:
@@ -324,6 +387,9 @@ def update_turbulence_fields(case_dir: Path, config: CaseConfig, dry_run: bool) 
 
 def main() -> None:
     args = parse_args()
+    if args.overwrite and args.skip_existing:
+        raise ValueError("--overwrite and --skip-existing cannot be used together")
+
     root = Path(__file__).resolve().parent
     source_case = root / args.source_case
     csv_path = root / args.csv
@@ -338,7 +404,7 @@ def main() -> None:
 
     configs = load_case_configs(csv_path)
 
-    case_numbers = [args.case] if args.case is not None else range(FIRST_CASE, LAST_CASE + 1)
+    case_numbers = selected_case_numbers(args, configs)
     for case_number in case_numbers:
         config = configs[case_number]
         stl_source = stl_dir / config.stl_name
@@ -346,6 +412,10 @@ def main() -> None:
             raise FileNotFoundError(f"Expected STL not found for {config.case_name}: {stl_source}")
 
         case_dir = root / config.case_name
+        if case_dir.exists() and args.skip_existing:
+            print(f"{config.case_name}: already exists, skipping")
+            continue
+
         print(
             f"{config.case_name}: {config.stl_name}, "
             f"Uout={config.velocity_value}, k={config.k_value}, "
